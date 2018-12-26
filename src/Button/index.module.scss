@@ -1,0 +1,33 @@
+@import '../globals';
+
+.button {
+  
+  display: block;
+  margin: 15px auto;
+  padding: 10px 20px;
+  min-width: 160px;
+  background: $white;
+  border: none;
+  cursor: pointer;
+  border: solid 1px $borderColor;
+  outline: none;
+  user-select: none;
+  color: $black;
+  transition:
+    opacity .25s ease,
+    background-color .25s ease,
+    border-color .25s ease,
+    color .25s ease;
+  
+  &:hover:enabled {
+    background-color: darken($white, 10);
+    border-color: darken($white, 10);
+    color: lighten($black, 30);
+  }
+
+  &[disabled] {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+}
