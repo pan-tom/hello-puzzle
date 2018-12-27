@@ -20,7 +20,7 @@ const Item = ({
     style={{
       width: size+'px',
       height: size+'px',
-      top: (item.row*size+1)+'px',
+      top: (item.row*size)+'px',
       left: (item.col*size)+'px'
     }}
   >
