@@ -11,7 +11,7 @@ class App extends React.Component {
     this.state = {
       boardOn: false,
       picture: null,
-      btnDisabled: true
+      btnDisabled: false
     }
   }
 
@@ -39,10 +39,6 @@ class App extends React.Component {
     });
   };
 
-  componentDidMount() {
-    this.loadPicture();
-  };
-
   disableButton = flag => {
     this.setState({
       btnDisabled: flag
@@ -66,13 +62,13 @@ class App extends React.Component {
           onClick={this.clickLoadPicture}
           disabled={btnDisabled}
         >
-          Try another picture
+          Load from web
         </Button>
         <Upload
           onUpload={this.uploadPicture}
           disabled={btnDisabled}
         >
-          Upload your own
+          Upload from device
         </Upload>
       </React.Fragment>
     )

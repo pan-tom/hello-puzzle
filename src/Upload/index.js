@@ -20,14 +20,14 @@ class Upload extends React.Component {
   };
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, children } = this.props;
     return (
       <div className={style['upload-btn-wrapper']}>
         <Button
           disabled={disabled}
           onClick={() => this.inputRef.click()}
         >
-          Upload your own
+          {children}
         </Button>
         <input
           ref={ref => this.inputRef = ref}

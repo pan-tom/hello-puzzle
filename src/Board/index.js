@@ -15,6 +15,7 @@ class Board extends React.Component {
     const { cols, rows, size } = props;
     this.state = {
       cols, rows, size,
+      loading: false,
       boardMap: [],
       boardImages: [],
       activeItems: [],
@@ -28,6 +29,7 @@ class Board extends React.Component {
     if(prevProps.picture !== picture) {
       disableButton(true);
       this.setState({
+        loading: true,
         boardMap: [],
         boardImages: [],
         activeItems: [],
@@ -38,6 +40,7 @@ class Board extends React.Component {
           picture, size, cols, rows,
           setStateFn: res => {
             this.setState({
+              loading: false,
               boardMap: this.generateBoardMap({ cols, rows }),
               boardImages: res.pieces
             }, () => {
@@ -169,7 +172,7 @@ class Board extends React.Component {
 
   render() {
     
-    const { cols, rows, size, boardMap,
+    const { cols, rows, size, loading, boardMap,
       boardImages, boardActive, boardDone } = this.state;
    
     return (
@@ -180,7 +183,7 @@ class Board extends React.Component {
           height: size * rows,
         }}
       >
-        { boardImages.length > 0 ? boardMap.map(item =>
+        { !loading ? boardMap.map(item =>
           <Item
             key={item.id}
             size={size}
