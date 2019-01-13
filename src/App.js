@@ -11,7 +11,8 @@ class App extends React.Component {
     this.state = {
       boardOn: false,
       picture: null,
-      btnDisabled: false
+      btnDisabled: false,
+      resetBoard: false,
     }
   }
 
@@ -19,23 +20,34 @@ class App extends React.Component {
     this.setState({
       boardOn: true,
       picture: 'https://picsum.photos/800/600/?random&_t='
-        + (new Date().getTime())
+        + (new Date().getTime()),
+      resetBoard: false,
     });
   };
 
   clickLoadPicture = event => {
-    this.setState({
+     this.setState({
+      btnDisabled: true,
       boardOn: false,
-      picture: null
+      resetBoard: true,
     }, () => {
-      this.loadPicture();
+      setTimeout(() => {
+        this.loadPicture();
+      }, 500);
     });
   };
 
   uploadPicture = dataURL => {
     this.setState({
+      btnDisabled: true,
       boardOn: false,
-      picture: dataURL
+      resetBoard: true,
+    }, () => {
+      setTimeout(() => {
+        this.setState({
+          picture: dataURL
+        });
+      }, 250);
     });
   };
 
@@ -46,7 +58,7 @@ class App extends React.Component {
   }
   
   render() {
-    const { boardOn, picture, btnDisabled } = this.state;
+    const { boardOn, picture, btnDisabled, resetBoard } = this.state;
     return (
       <React.Fragment>
         <Board
@@ -57,6 +69,7 @@ class App extends React.Component {
           boardOn={boardOn}
           picture={picture}
           disableButton={this.disableButton}
+          reset={resetBoard}
         />
         <Button
           onClick={this.clickLoadPicture}

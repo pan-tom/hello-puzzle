@@ -25,9 +25,12 @@ class Board extends React.Component {
   };
   
   componentDidUpdate(prevProps) {
-    const { cols, rows, size, shifts, picture, disableButton } = this.props;
-    if(prevProps.picture !== picture) {
-      disableButton(true);
+    const { cols, rows, size, shifts, picture, disableButton, reset }
+      = this.props;
+    if(!prevProps.reset && reset) {
+      this.resetItems();
+    }
+    if(prevProps.picture !== picture && picture) {
       this.setState({
         loading: true,
         boardMap: [],
@@ -39,6 +42,7 @@ class Board extends React.Component {
         new ImagePieces({
           picture, size, cols, rows,
           setStateFn: res => {
+            disableButton(false);
             this.setState({
               loading: false,
               boardMap: this.generateBoardMap({ cols, rows }),
@@ -49,8 +53,6 @@ class Board extends React.Component {
                 this.shuffleItems(shifts, () => {
                   this.setState({
                     boardActive: true
-                  }, () => {
-                    disableButton(false);
                   });
                 });
               }, 500);
@@ -123,6 +125,17 @@ class Board extends React.Component {
         return item;
       });
       return { boardMap, activeItems };
+    });
+  };
+
+  resetItems = () => {
+    clearInterval(this.intvalShuffle);
+    this.setState(state => {
+      const { cols, rows } = this.props;
+      return {
+        boardActive: false,
+        boardMap: this.generateBoardMap({ cols, rows })
+      }
     });
   };
 
