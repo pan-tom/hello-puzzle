@@ -45,7 +45,8 @@ class App extends React.Component {
     }, () => {
       setTimeout(() => {
         this.setState({
-          picture: dataURL
+          picture: dataURL,
+          resetBoard: false,
         });
       }, 250);
     });
