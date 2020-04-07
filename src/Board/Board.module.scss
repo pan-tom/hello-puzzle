@@ -7,7 +7,6 @@
   margin: 0 auto;
   border: solid 1px $borderColor;
   background: $white;
-  animation: fadeIn 1s;
 
   > .boardItem {
     
@@ -24,10 +23,9 @@
     margin: 0;
     padding: 0;
     transition:
-      opacity 1s ease-out,
+      opacity .5s ease-out,
       top .25s ease-out,
       left .25s ease-out;
-    animation: fadeIn 1.5s;
     -webkit-tap-highlight-color: transparent;
 
     &:hover, &:focus, &:active {
@@ -39,10 +37,10 @@
       width: 100%;
       height: auto;
       text-align: center;
-      transition: opacity 1s ease-out;
+      transition: opacity .5s ease-out;
       user-select: none;
       &.hide {
-        transition: opacity 1s ease-out;
+        transition: opacity .5s ease-out;
         opacity: 0;
       }
     }

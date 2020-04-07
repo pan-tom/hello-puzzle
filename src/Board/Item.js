@@ -1,6 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styles from './index.module.scss';
+import styles from './Board.module.scss';
+
+import classnames from 'classnames/bind';
+var cx = classnames.bind(styles);
 
 const Item = ({
   size,
@@ -10,10 +12,9 @@ const Item = ({
   clickItem,
 }) => (
   <button
-    className={
-      styles.boardItem + (boardActive &&
-        item.active ? ' '+styles.boardItemActive : '')
-    }
+    className={cx('boardItem', {
+      boardItemActive: boardActive && item.active,
+    })}
     onClick={event =>
       boardActive && item.active ? clickItem(item.id, event) : null
     }
@@ -32,19 +33,5 @@ const Item = ({
     /> }
   </button>
 );
-
-Item.propTypes = {
-  size: PropTypes.number.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.number,
-    active: PropTypes.bool,
-    col: PropTypes.number,
-    row: PropTypes.number,
-    ord: PropTypes.number,
-  }).isRequired,
-  image: PropTypes.string.isRequired,
-  boardActive: PropTypes.bool.isRequired,
-  clickItem: PropTypes.func.isRequired,
-}
 
 export default Item;
