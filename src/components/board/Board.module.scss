@@ -1,0 +1,9 @@
+@use '@/shared/styles/tokens' as *;
+
+#board {
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  border: solid 1px $borderColor;
+  background: $white;
+}
