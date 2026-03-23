@@ -1,6 +1,7 @@
 class ImagePieces {
   _params = {}
 
+  // Loads source image and generates tile images as base64 data URLs.
   make(params) {
     this._params = params
     const image = new Image()
@@ -18,6 +19,7 @@ class ImagePieces {
     })
   }
 
+  // Normalizes crop/scale data so image fills the target board area.
   _process = () => {
     const { image, size, cols, rows } = this._params
     const { width, height } = image
@@ -38,11 +40,12 @@ class ImagePieces {
     return this._cutImage()
   }
 
+  // Slices the prepared image into board-sized canvas tiles.
   _cutImage = () => {
     const { image, size, cols, rows, offsetX, offsetY } = this._params
     const pieces = []
-    for (var y = 0; y < cols; y++) {
-      for (var x = 0; x < rows; x++) {
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
         const canvas = document.createElement('canvas')
         const context = canvas.getContext('2d')
         canvas.width = size

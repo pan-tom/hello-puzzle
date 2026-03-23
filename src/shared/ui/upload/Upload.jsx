@@ -1,12 +1,14 @@
 import React, { useRef } from 'react'
 import style from './Upload.module.scss'
-import Button from '../Button'
+import Button from '@/shared/ui/button'
 
+// Hidden file input wrapped in a styled button.
 const Upload = ({ children, disabled, onComplete }) => {
   const inputRef = useRef()
 
   const handleButtonClick = () => inputRef.current.click()
 
+  // Reads selected image file as data URL and forwards it upstream.
   const handleFileChange = event => {
     const reader = new FileReader()
     reader.readAsDataURL(event.target.files[0])
