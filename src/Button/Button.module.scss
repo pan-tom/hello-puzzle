@@ -1,7 +1,7 @@
-@import '../globals';
+@use '../globals' as *;
+@use 'sass:color';
 
 .button {
-  
   display: block;
   margin: 15px auto;
   padding: 10px 20px;
@@ -14,20 +14,19 @@
   user-select: none;
   color: $black;
   transition:
-    opacity .25s ease,
-    background-color .25s ease,
-    border-color .25s ease,
-    color .25s ease;
-  
+    opacity 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+
   &:hover:enabled {
-    background-color: darken($white, 10);
-    border-color: darken($white, 10);
-    color: lighten($black, 30);
+    background-color: color.adjust($white, $lightness: -10%);
+    border-color: color.adjust($white, $lightness: -10%);
+    color: color.adjust($black, $lightness: 30%);
   }
 
   &[disabled] {
-    opacity: .5;
+    opacity: 0.5;
     cursor: not-allowed;
   }
-
 }
