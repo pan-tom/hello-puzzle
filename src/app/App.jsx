@@ -3,12 +3,14 @@ import Board from '@/components/board'
 import Button from '@/shared/ui/button'
 import Upload from '@/shared/ui/upload'
 import AppGlobalStyle from '@/shared/styles/AppGlobalStyle'
+import PictureAttribution from './PictureAttribution'
 import useAppController from './useAppController'
 
 // Top-level app composition: puzzle board + user actions.
 const App = () => {
   const {
     picture,
+    pictureAttribution,
     isButtonDisabled,
     handleLoadPicture,
     handleUploadPicture,
@@ -34,6 +36,8 @@ const App = () => {
       <Upload onComplete={handleUploadPicture} disabled={isButtonDisabled}>
         Upload from device
       </Upload>
+
+      {!isButtonDisabled && <PictureAttribution attribution={pictureAttribution} />}
     </>
   )
 }
