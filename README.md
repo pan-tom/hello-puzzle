@@ -6,7 +6,7 @@ Sliding puzzle game built with React + Vite.
 
 - React 19
 - Vite 7
-- Sass (SCSS modules)
+- styled-components
 - Lodash
 
 ## Requirements
@@ -18,7 +18,7 @@ Sliding puzzle game built with React + Vite.
 - `npm run dev` - start local dev server
 - `npm run build` - create production build
 - `npm run preview` - preview production build locally
-- `npm run format` - format JS/JSX/SCSS files with Prettier
+- `npm run format` - format JS/JSX files with Prettier
 
 ## Getting Started
 
@@ -29,29 +29,48 @@ npm run dev
 
 Then open the URL printed by Vite (usually `http://localhost:5173`).
 
+## Gameplay
+
+- Load an image from the web or upload one from your device.
+- The image is sliced into tiles and shuffled using valid moves.
+- Solve the puzzle by sliding adjacent tiles until order is restored.
+
 ## Project Structure
 
 ```txt
 src/
-  app/                    # app shell + app-level state/controller
+  app/                      # app shell + app-level state/controller
+    App.jsx
+    useAppController.js
+    appState.js
   components/
-    board/                # board feature and its internal logic
+    board/                  # board orchestration + domain logic
       Board.jsx
       BoardView.jsx
-      boardState.js
       boardMapTools.js
+      boardState.js
       useBoardController.js
-    item/                 # reusable puzzle tile component
-    loading/              # reusable loading spinner component
+      BoardView.styles.js
+    item/                   # puzzle tile component
+      Item.jsx
+      Item.styles.js
+    loading/                # loading spinner component
+      Loading.jsx
+      Loading.styles.js
   shared/
-    ui/                   # shared UI primitives
+    ui/                     # shared UI primitives
       button/
+        Button.jsx
+        Button.styles.js
       upload/
-    lib/                  # shared utils/services
+        Upload.jsx
+        Upload.styles.js
+    lib/                    # shared utils/services
       imagePieces.js
-    styles/               # global design tokens/animations
-      tokens.scss
-      animations.scss
+    styles/                 # design tokens + app global style
+      tokens.js
+      AppGlobalStyle.js
+  index.jsx
 ```
 
 ## Import Aliases
@@ -66,7 +85,15 @@ Examples:
 - `@/components/board`
 - `@/shared/ui/button`
 
+## Styling Conventions
+
+- Styling uses `styled-components`.
+- Component files focus on behavior/render.
+- Styled definitions are colocated in `*.styles.js` files.
+- App-wide base styles are declared in `src/shared/styles/AppGlobalStyle.js`.
+- Shared color tokens live in `src/shared/styles/tokens.js`.
+
 ## Notes
 
 - Puzzle shuffling is done via legal tile moves, so generated boards stay solvable.
-- Styling is SCSS modules + shared tokens in `src/shared/styles/tokens.scss`.
+- Non-square board support is handled in both board mapping and image slicing logic.

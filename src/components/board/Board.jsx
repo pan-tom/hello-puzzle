@@ -3,16 +3,22 @@ import BoardView from './BoardView'
 import useBoardController from './useBoardController'
 
 // Container component: wires board controller state into the view.
-function Board({ cols, rows, size, shifts, picture, setButtonState }) {
-  const { loading, boardMap, boardImages, boardActive, boardDone, onTileClick } =
-    useBoardController({
-      cols,
-      rows,
-      size,
-      shifts,
-      picture,
-      setButtonState,
-    })
+const Board = ({ cols, rows, size, shifts, picture, setButtonState }) => {
+  const {
+    loading,
+    boardMap,
+    boardImages,
+    boardActive,
+    boardDone,
+    onTileClick,
+  } = useBoardController({
+    cols,
+    rows,
+    size,
+    shifts,
+    picture,
+    setButtonState,
+  })
 
   return (
     <BoardView

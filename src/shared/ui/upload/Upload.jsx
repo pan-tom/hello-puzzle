@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
-import style from './Upload.module.scss'
 import Button from '@/shared/ui/button'
+import { UploadButtonWrapper } from './Upload.styles'
 
 // Hidden file input wrapped in a styled button.
 const Upload = ({ children, disabled, onComplete }) => {
@@ -16,7 +16,7 @@ const Upload = ({ children, disabled, onComplete }) => {
   }
 
   return (
-    <div className={style['upload-btn-wrapper']}>
+    <UploadButtonWrapper>
       <Button disabled={disabled} onClick={handleButtonClick}>
         {children}
       </Button>
@@ -26,7 +26,7 @@ const Upload = ({ children, disabled, onComplete }) => {
         type="file"
         accept="image/jpeg,image/png"
       />
-    </div>
+    </UploadButtonWrapper>
   )
 }
 
