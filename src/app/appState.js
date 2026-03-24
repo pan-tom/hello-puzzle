@@ -1,11 +1,13 @@
 const APP_ACTIONS = {
   LOAD_PICTURE: 'LOAD_PICTURE',
   SET_BUTTON_STATE: 'SET_BUTTON_STATE',
+  SET_PICTURE_ATTRIBUTION: 'SET_PICTURE_ATTRIBUTION',
 }
 
 // App-level state: selected image and control lock state.
 const initialAppState = {
   picture: null,
+  pictureAttribution: null,
   isButtonDisabled: false,
 }
 
@@ -18,6 +20,10 @@ const appActions = {
   setButtonState: isEnabled => ({
     type: APP_ACTIONS.SET_BUTTON_STATE,
     payload: isEnabled,
+  }),
+  setPictureAttribution: attribution => ({
+    type: APP_ACTIONS.SET_PICTURE_ATTRIBUTION,
+    payload: attribution,
   }),
 }
 
@@ -35,13 +41,29 @@ const appReducer = (state, action) => {
         ...state,
         isButtonDisabled: !action.payload,
       }
+    case APP_ACTIONS.SET_PICTURE_ATTRIBUTION:
+      return {
+        ...state,
+        pictureAttribution: action.payload,
+      }
     default:
       throw new Error('Unknown app action')
   }
 }
 
-// Adds cache-busting timestamp so each request fetches a fresh random image.
-const makeRandomPictureUrl = () =>
-  `https://picsum.photos/800/600/?random&_t=${new Date().getTime()}`
+const resolveFunctionsOrigin = () => {
+  const configuredOrigin = import.meta.env.VITE_FUNCTIONS_ORIGIN
+  if (configuredOrigin) {
+    return configuredOrigin.replace(/\/$/, '')
+  }
 
-export { appActions, appReducer, initialAppState, makeRandomPictureUrl }
+  return ''
+}
+
+// Builds metadata endpoint request with cache-busting query.
+const makePuzzleImageRequestUrl = () => {
+  const base = resolveFunctionsOrigin()
+  return `${base}/.netlify/functions/puzzle-image`
+}
+
+export { appActions, appReducer, initialAppState, makePuzzleImageRequestUrl }

@@ -3,21 +3,50 @@ import {
   appActions,
   appReducer,
   initialAppState,
-  makeRandomPictureUrl,
+  makePuzzleImageRequestUrl,
 } from './appState'
 
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, isButtonDisabled } = state
+  const { picture, pictureAttribution, isButtonDisabled } = state
 
-  // Loads a random image and starts board initialization.
-  const handleLoadPicture = useCallback(() => {
-    dispatch(appActions.loadPicture(makeRandomPictureUrl()))
+  // Requests Unsplash metadata through Netlify and starts board initialization.
+  const handleLoadPicture = useCallback(async () => {
+    dispatch(appActions.setButtonState(false))
+
+    try {
+      const response = await fetch(makePuzzleImageRequestUrl())
+      if (!response.ok) {
+        throw new Error(`Puzzle image endpoint failed (${response.status})`)
+      }
+
+      const contentType = response.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) {
+        const text = await response.text()
+        const snippet = text.slice(0, 80).replace(/\s+/g, ' ')
+        throw new Error(
+          `Puzzle image endpoint returned non-JSON response: "${snippet}". ` +
+            'Check local function server routing.'
+        )
+      }
+
+      const payload = await response.json()
+      if (!payload?.imageUrl) {
+        throw new Error('Puzzle image endpoint returned no imageUrl')
+      }
+
+      dispatch(appActions.setPictureAttribution(payload.attribution || null))
+      dispatch(appActions.loadPicture(payload.imageUrl))
+    } catch (error) {
+      console.error(error)
+      dispatch(appActions.setButtonState(true))
+    }
   }, [])
 
   // Uses user-provided image data URL as puzzle source.
   const handleUploadPicture = useCallback(dataURL => {
+    dispatch(appActions.setPictureAttribution(null))
     dispatch(appActions.loadPicture(dataURL))
   }, [])
 
@@ -28,6 +57,7 @@ const useAppController = () => {
 
   return {
     picture,
+    pictureAttribution,
     isButtonDisabled,
     handleLoadPicture,
     handleUploadPicture,

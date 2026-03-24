@@ -113,6 +113,20 @@ const useBoardController = ({
     }
 
     initializeBoard()
+      .catch(error => {
+        if (cancelled) {
+          return
+        }
+        console.error(error)
+        dispatch(
+          boardActions.setInitializedBoard({
+            boardMap: [],
+            movableTiles: [],
+            boardImages: [],
+          })
+        )
+        setButtonState(true)
+      })
 
     return () => {
       cancelled = true
