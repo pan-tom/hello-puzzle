@@ -2,6 +2,8 @@
 
 Sliding puzzle game built with React + Vite.
 
+Online demo: https://hello-puzzle.netlify.app
+
 ## Stack
 
 - React 19
