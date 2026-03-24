@@ -1,0 +1,57 @@
+import styled, { css } from 'styled-components'
+
+const TileButton = styled.button`
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  cursor: default;
+  border: none;
+  outline: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+  transition:
+    opacity 0.5s ease-out,
+    top 0.25s ease-out,
+    left 0.25s ease-out;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: none;
+  }
+
+  ${props =>
+    props.$isActive &&
+    css`
+      cursor: pointer;
+      z-index: 2;
+
+      &:hover,
+      &:focus,
+      &:active {
+        z-index: 3;
+      }
+    `}
+`
+
+const TileImage = styled.img`
+  display: block;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  transition: opacity 0.5s ease-out;
+  user-select: none;
+
+  ${props =>
+    props.$isHidden &&
+    css`
+      opacity: 0;
+    `}
+`
+
+export { TileButton, TileImage }

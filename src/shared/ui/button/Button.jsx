@@ -1,11 +1,11 @@
 import React from 'react'
-import style from './Button.module.scss'
+import { StyledButton } from './Button.styles'
 
 // Shared button primitive used across app controls.
 const Button = ({ onClick, disabled, children }) => (
-  <button onClick={onClick} disabled={disabled} className={style.button}>
+  <StyledButton onClick={onClick} disabled={disabled}>
     {children}
-  </button>
+  </StyledButton>
 )
 
 export default Button

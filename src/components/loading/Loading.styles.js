@@ -1,6 +1,6 @@
-@use '@/shared/styles/tokens' as *;
+import styled from 'styled-components'
 
-.loader {
+const LoaderImage = styled.img`
   width: 60px;
   height: 60px;
   position: absolute;
@@ -8,10 +8,6 @@
   left: 50%;
   margin: -30px 0 0 -30px;
   user-select: none;
-}
+`
 
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
+export { LoaderImage }
