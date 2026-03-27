@@ -5,16 +5,16 @@ import { ActionsRoot } from './PictureSourceActions.styles'
 
 // Chooses puzzle image source: random web image or local file upload.
 const PictureSourceActions = ({
-  disabled,
+  isDisabled,
   onLoadFromWeb,
   onUploadFromDevice,
 }) => (
   <ActionsRoot aria-label="Load puzzle image">
-    <Button onClick={onLoadFromWeb} disabled={disabled}>
+    <Button onClick={onLoadFromWeb} disabled={isDisabled}>
       Load from web
     </Button>
 
-    <Upload onComplete={onUploadFromDevice} disabled={disabled}>
+    <Upload onComplete={onUploadFromDevice} disabled={isDisabled}>
       Upload from device
     </Upload>
   </ActionsRoot>

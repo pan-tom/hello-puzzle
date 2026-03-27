@@ -9,11 +9,15 @@ import {
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, pictureAttribution, isPictureLoading } = state
+  const { picture, pictureAttribution, isPictureLoading, isPreparingBoard } =
+    state
 
-  // Requests Unsplash metadata through Netlify and starts board initialization.
+  const setPreparingBoard = useCallback(preparing => {
+    dispatch(appActions.setPreparingBoard(preparing))
+  }, [])
+
   const handleLoadPicture = useCallback(async () => {
-    dispatch(appActions.setPictureLoading(true))
+    dispatch(appActions.beginWebImageFetch())
 
     try {
       const response = await fetch(makePuzzleImageRequestUrl())
@@ -36,32 +40,30 @@ const useAppController = () => {
         throw new Error('Puzzle image endpoint returned no imageUrl')
       }
 
-      dispatch(appActions.setPictureAttribution(payload.attribution || null))
-      dispatch(appActions.loadPicture(payload.imageUrl))
+      dispatch(
+        appActions.webImageFetchSucceeded({
+          attribution: payload.attribution || null,
+          imageUrl: payload.imageUrl,
+        })
+      )
     } catch (error) {
       console.error(error)
-      dispatch(appActions.setPictureLoading(false))
+      dispatch(appActions.webImageFetchFailed())
     }
   }, [])
 
-  // Uses user-provided image data URL as puzzle source.
   const handleUploadPicture = useCallback(dataURL => {
-    dispatch(appActions.setPictureAttribution(null))
-    dispatch(appActions.loadPicture(dataURL))
-  }, [])
-
-  // Enables/disables load/upload controls during board lifecycle.
-  const setPictureLoading = useCallback(flag => {
-    dispatch(appActions.setPictureLoading(flag))
+    dispatch(appActions.startUploadFromDevice(dataURL))
   }, [])
 
   return {
     picture,
     pictureAttribution,
     isPictureLoading,
+    isPreparingBoard,
     handleLoadPicture,
     handleUploadPicture,
-    setPictureLoading,
+    setPreparingBoard,
   }
 }
 

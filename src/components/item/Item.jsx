@@ -2,11 +2,11 @@ import React from 'react'
 import { TileButton, TileImage } from './Item.styles'
 
 // Single puzzle tile; clickable only when it is currently movable.
-const Item = ({ size, tile, image, boardActive, onTileClick }) => (
+const Item = ({ size, tile, image, isBoardActive, onTileClick }) => (
   <TileButton
-    $isActive={boardActive && tile.active}
+    $isActive={isBoardActive && tile.active}
     onClick={event =>
-      boardActive && tile.active ? onTileClick(tile.id, event) : null
+      isBoardActive && tile.active ? onTileClick(tile.id, event) : null
     }
     style={{
       width: size + 'px',
@@ -20,7 +20,7 @@ const Item = ({ size, tile, image, boardActive, onTileClick }) => (
         src={image}
         alt={`piece ${tile.id}`}
         draggable={false}
-        $isHidden={boardActive && tile.id === 1}
+        $isHidden={isBoardActive && tile.id === 1}
       />
     )}
   </TileButton>

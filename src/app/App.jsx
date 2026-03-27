@@ -10,9 +10,10 @@ const App = () => {
     picture,
     pictureAttribution,
     isPictureLoading,
+    isPreparingBoard,
     handleLoadPicture,
     handleUploadPicture,
-    setPictureLoading,
+    setPreparingBoard,
   } = useAppController()
 
   return (
@@ -25,16 +26,17 @@ const App = () => {
         shifts={20}
         size={80}
         picture={picture}
-        setPictureLoading={setPictureLoading}
+        isPictureLoading={isPictureLoading}
+        setPreparingBoard={setPreparingBoard}
       />
 
       <PictureAttribution
-        visible={!isPictureLoading}
+        isVisible={!!pictureAttribution && !isPictureLoading}
         attribution={pictureAttribution}
       />
 
       <PictureSourceActions
-        disabled={isPictureLoading}
+        isDisabled={isPreparingBoard}
         onLoadFromWeb={handleLoadPicture}
         onUploadFromDevice={handleUploadPicture}
       />

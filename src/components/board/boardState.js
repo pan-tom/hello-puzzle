@@ -1,19 +1,6 @@
 import * as boardMapTools from './boardMapTools'
 
-// Produces a detached board copy before mutating operations.
-export const cloneBoardTiles = boardMap => boardMap.map(tile => ({ ...tile }))
-
-// Single source of truth for board UI/gameplay state.
-export const initialBoardState = {
-  loading: false,
-  boardMap: [],
-  boardImages: [],
-  movableTiles: [],
-  boardActive: false,
-  boardDone: false,
-}
-
-const ACTIONS = {
+const BOARD_ACTIONS = {
   RESET_FOR_NEW_PICTURE: 'RESET_FOR_NEW_PICTURE',
   SET_INITIALIZED_BOARD: 'SET_INITIALIZED_BOARD',
   SET_BOARD_POSITION: 'SET_BOARD_POSITION',
@@ -21,56 +8,69 @@ const ACTIONS = {
   SET_BOARD_DONE: 'SET_BOARD_DONE',
 }
 
+// Produces a detached board copy before mutating operations.
+export const cloneBoardTiles = boardMap => boardMap.map(tile => ({ ...tile }))
+
+// Single source of truth for board UI/gameplay state.
+export const initialBoardState = {
+  isInitializing: false,
+  boardMap: [],
+  boardImages: [],
+  movableTiles: [],
+  isBoardActive: false,
+  isBoardDone: false,
+}
+
 // Action creators keep board updates explicit and predictable.
 export const boardActions = {
-  resetForNewPicture: () => ({ type: ACTIONS.RESET_FOR_NEW_PICTURE }),
+  resetForNewPicture: () => ({ type: BOARD_ACTIONS.RESET_FOR_NEW_PICTURE }),
   setInitializedBoard: ({ boardMap, movableTiles, boardImages }) => ({
-    type: ACTIONS.SET_INITIALIZED_BOARD,
+    type: BOARD_ACTIONS.SET_INITIALIZED_BOARD,
     payload: { boardMap, movableTiles, boardImages },
   }),
   setBoardPosition: payload => ({
-    type: ACTIONS.SET_BOARD_POSITION,
+    type: BOARD_ACTIONS.SET_BOARD_POSITION,
     payload,
   }),
   setBoardActive: isActive => ({
-    type: ACTIONS.SET_BOARD_ACTIVE,
+    type: BOARD_ACTIONS.SET_BOARD_ACTIVE,
     payload: isActive,
   }),
-  setBoardDone: () => ({ type: ACTIONS.SET_BOARD_DONE }),
+  setBoardDone: () => ({ type: BOARD_ACTIONS.SET_BOARD_DONE }),
 }
 
 // Reducer for board state transitions used by the controller hook.
 export const boardReducer = (state, action) => {
   switch (action.type) {
-    case ACTIONS.RESET_FOR_NEW_PICTURE:
+    case BOARD_ACTIONS.RESET_FOR_NEW_PICTURE:
       return {
         ...initialBoardState,
-        loading: true,
+        isInitializing: true,
       }
-    case ACTIONS.SET_INITIALIZED_BOARD:
+    case BOARD_ACTIONS.SET_INITIALIZED_BOARD:
       return {
         ...state,
-        loading: false,
+        isInitializing: false,
         boardMap: action.payload.boardMap,
         movableTiles: action.payload.movableTiles,
         boardImages: action.payload.boardImages,
       }
-    case ACTIONS.SET_BOARD_POSITION:
+    case BOARD_ACTIONS.SET_BOARD_POSITION:
       return {
         ...state,
         boardMap: action.payload.boardMap,
         movableTiles: action.payload.movableTiles,
       }
-    case ACTIONS.SET_BOARD_ACTIVE:
+    case BOARD_ACTIONS.SET_BOARD_ACTIVE:
       return {
         ...state,
-        boardActive: action.payload,
+        isBoardActive: action.payload,
       }
-    case ACTIONS.SET_BOARD_DONE:
+    case BOARD_ACTIONS.SET_BOARD_DONE:
       return {
         ...state,
-        boardActive: false,
-        boardDone: true,
+        isBoardActive: false,
+        isBoardDone: true,
       }
     default:
       return state

@@ -5,9 +5,10 @@ import {
   AttributionLink,
 } from './PictureAttribution.styles'
 
-const PictureAttribution = ({ visible, attribution }) => (
+// Renders Unsplash attribution if visible and attribution data is present.
+const PictureAttribution = ({ isVisible, attribution }) => (
   <Attribution>
-    {visible && attribution && (
+    {isVisible && attribution && (
       <AttributionText>
         Photo by{' '}
         <AttributionLink
