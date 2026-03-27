@@ -7,10 +7,14 @@ const getAdjacentTiles = ({ boardMap, cols }) => {
   const orderedBoard = orderBy(boardMap, 'ord', 'asc')
   const emptyTile = orderedBoard[findIndex(orderedBoard, { id: 1 })]
   const emptyOrder = emptyTile.ord
-  const topTile = orderedBoard[findIndex(orderedBoard, { ord: emptyOrder - cols })]
-  const rightTile = orderedBoard[findIndex(orderedBoard, { ord: emptyOrder + 1 })]
-  const bottomTile = orderedBoard[findIndex(orderedBoard, { ord: emptyOrder + cols })]
-  const leftTile = orderedBoard[findIndex(orderedBoard, { ord: emptyOrder - 1 })]
+  const topTile =
+    orderedBoard[findIndex(orderedBoard, { ord: emptyOrder - cols })]
+  const rightTile =
+    orderedBoard[findIndex(orderedBoard, { ord: emptyOrder + 1 })]
+  const bottomTile =
+    orderedBoard[findIndex(orderedBoard, { ord: emptyOrder + cols })]
+  const leftTile =
+    orderedBoard[findIndex(orderedBoard, { ord: emptyOrder - 1 })]
   const adjacentTiles = []
   if (topTile && topTile.col === emptyTile.col) {
     adjacentTiles.push(topTile)

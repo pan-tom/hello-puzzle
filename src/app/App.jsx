@@ -20,6 +20,7 @@ const App = () => {
   return (
     <>
       <AppGlobalStyle />
+
       <Board
         cols={4}
         rows={4}
@@ -37,7 +38,9 @@ const App = () => {
         Upload from device
       </Upload>
 
-      {!isButtonDisabled && <PictureAttribution attribution={pictureAttribution} />}
+      {!isButtonDisabled && (
+        <PictureAttribution attribution={pictureAttribution} />
+      )}
     </>
   )
 }
