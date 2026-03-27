@@ -1,6 +1,7 @@
 {
-  "short_name": "hello-puzzle",
-  "name": "Puzzle Game App",
+  "short_name": "Hello Puzzle",
+  "name": "Hello Puzzle — sliding tile puzzle",
+  "description": "Play a sliding puzzle with your own image or a random photo. Not affiliated with Unsplash.",
   "icons": [
     {
       "src": "favicon.ico",

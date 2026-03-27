@@ -1,50 +1,72 @@
 const APP_ACTIONS = {
-  LOAD_PICTURE: 'LOAD_PICTURE',
-  SET_BUTTON_STATE: 'SET_BUTTON_STATE',
-  SET_PICTURE_ATTRIBUTION: 'SET_PICTURE_ATTRIBUTION',
+  BEGIN_WEB_IMAGE_FETCH: 'BEGIN_WEB_IMAGE_FETCH',
+  WEB_IMAGE_FETCH_SUCCEEDED: 'WEB_IMAGE_FETCH_SUCCEEDED',
+  WEB_IMAGE_FETCH_FAILED: 'WEB_IMAGE_FETCH_FAILED',
+  START_UPLOAD_FROM_DEVICE: 'START_UPLOAD_FROM_DEVICE',
+  SET_PREPARING_BOARD: 'SET_PREPARING_BOARD',
 }
 
-// App-level state: selected image and control lock state.
-const initialAppState = {
+// App-level state: selected image and preparing board state.
+export const initialAppState = {
   picture: null,
   pictureAttribution: null,
-  isButtonDisabled: false,
+  isPictureLoading: false,
+  isPreparingBoard: false,
 }
 
-// Action creators keep dispatch payloads consistent.
-const appActions = {
-  loadPicture: pictureUrl => ({
-    type: APP_ACTIONS.LOAD_PICTURE,
-    payload: pictureUrl,
+// One action per user-visible flow step (board still calls setPreparingBoard for lifecycle).
+export const appActions = {
+  beginWebImageFetch: () => ({ type: APP_ACTIONS.BEGIN_WEB_IMAGE_FETCH }),
+  webImageFetchSucceeded: ({ attribution, imageUrl }) => ({
+    type: APP_ACTIONS.WEB_IMAGE_FETCH_SUCCEEDED,
+    payload: { attribution, imageUrl },
   }),
-  setButtonState: isEnabled => ({
-    type: APP_ACTIONS.SET_BUTTON_STATE,
-    payload: isEnabled,
+  webImageFetchFailed: () => ({ type: APP_ACTIONS.WEB_IMAGE_FETCH_FAILED }),
+  startUploadFromDevice: dataURL => ({
+    type: APP_ACTIONS.START_UPLOAD_FROM_DEVICE,
+    payload: dataURL,
   }),
-  setPictureAttribution: attribution => ({
-    type: APP_ACTIONS.SET_PICTURE_ATTRIBUTION,
-    payload: attribution,
+  setPreparingBoard: preparing => ({
+    type: APP_ACTIONS.SET_PREPARING_BOARD,
+    payload: preparing,
   }),
 }
 
-// Handles app state transitions for image loading and button lock.
-const appReducer = (state, action) => {
+export const appReducer = (state, action) => {
   switch (action.type) {
-    case APP_ACTIONS.LOAD_PICTURE:
+    case APP_ACTIONS.BEGIN_WEB_IMAGE_FETCH:
       return {
         ...state,
-        isButtonDisabled: true,
+        isPictureLoading: true,
+        isPreparingBoard: true,
+        pictureAttribution: null,
+      }
+    case APP_ACTIONS.WEB_IMAGE_FETCH_SUCCEEDED: {
+      const { attribution, imageUrl } = action.payload
+      return {
+        ...state,
+        pictureAttribution: attribution,
+        isPictureLoading: false,
+        picture: imageUrl,
+      }
+    }
+    case APP_ACTIONS.WEB_IMAGE_FETCH_FAILED:
+      return {
+        ...state,
+        isPictureLoading: false,
+        isPreparingBoard: false,
+      }
+    case APP_ACTIONS.START_UPLOAD_FROM_DEVICE:
+      return {
+        ...state,
+        pictureAttribution: null,
+        isPreparingBoard: true,
         picture: action.payload,
       }
-    case APP_ACTIONS.SET_BUTTON_STATE:
+    case APP_ACTIONS.SET_PREPARING_BOARD:
       return {
         ...state,
-        isButtonDisabled: !action.payload,
-      }
-    case APP_ACTIONS.SET_PICTURE_ATTRIBUTION:
-      return {
-        ...state,
-        pictureAttribution: action.payload,
+        isPreparingBoard: action.payload,
       }
     default:
       throw new Error('Unknown app action')
@@ -61,9 +83,7 @@ const resolveFunctionsOrigin = () => {
 }
 
 // Builds metadata endpoint request with cache-busting query.
-const makePuzzleImageRequestUrl = () => {
+export const makePuzzleImageRequestUrl = () => {
   const base = resolveFunctionsOrigin()
   return `${base}/.netlify/functions/puzzle-image`
 }
-
-export { appActions, appReducer, initialAppState, makePuzzleImageRequestUrl }

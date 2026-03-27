@@ -8,11 +8,11 @@ const BoardView = ({
   cols,
   rows,
   size,
-  loading,
+  isInitializing,
+  isPictureLoading,
   boardMap,
   boardImages,
-  boardActive,
-  boardDone,
+  isBoardActive,
   onTileClick,
 }) => (
   <BoardContainer
@@ -21,20 +21,20 @@ const BoardView = ({
       height: size * rows,
     }}
   >
-    {loading && <Loading />}
-
-    {!loading &&
+    {isInitializing || isPictureLoading ? (
+      <Loading />
+    ) : (
       boardMap.map(tile => (
         <Item
           key={tile.id}
           size={size}
           tile={tile}
           image={boardImages[tile.id - 1] || ''}
-          boardActive={boardActive}
-          boardDone={boardDone}
+          isBoardActive={isBoardActive}
           onTileClick={onTileClick}
         />
-      ))}
+      ))
+    )}
   </BoardContainer>
 )
 

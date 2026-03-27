@@ -1,5 +1,12 @@
+/**
+ * Unsplash API compliance (see https://unsplash.com/documentation — guidelines):
+ * - Hotlink: imageUrl uses photo.urls from the API (Unsplash CDN), not a rehosted file.
+ * - Download: GET photo.links.download_location unchanged, then server notifies tracking.
+ * - Attribution: client shows photographer + Unsplash with referral params on public links.
+ */
 const DEFAULT_TOPIC = 'forest,animals'
 const UNSPLASH_RANDOM_URL = 'https://api.unsplash.com/photos/random'
+const UNSPLASH_SITE_URL = 'https://unsplash.com/'
 const UTM_SOURCE = 'hello_puzzle'
 const UTM_MEDIUM = 'referral'
 const CORS_HEADERS = {
@@ -60,11 +67,11 @@ const fetchUnsplashPhoto = async (topic, accessKey) => {
 
   return {
     imageUrl: imageUrl.toString(),
-    downloadLocation: createUnsplashLink(payload.links.download_location),
+    downloadLocation: payload.links.download_location,
     attribution: {
       photographerName: payload.user.name,
       photographerUrl: createUnsplashLink(payload.user.links.html),
-      unsplashUrl: createUnsplashLink(payload.links.html),
+      unsplashUrl: createUnsplashLink(UNSPLASH_SITE_URL),
     },
   }
 }

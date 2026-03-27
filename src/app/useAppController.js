@@ -9,11 +9,15 @@ import {
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, pictureAttribution, isButtonDisabled } = state
+  const { picture, pictureAttribution, isPictureLoading, isPreparingBoard } =
+    state
 
-  // Requests Unsplash metadata through Netlify and starts board initialization.
+  const setPreparingBoard = useCallback(preparing => {
+    dispatch(appActions.setPreparingBoard(preparing))
+  }, [])
+
   const handleLoadPicture = useCallback(async () => {
-    dispatch(appActions.setButtonState(false))
+    dispatch(appActions.beginWebImageFetch())
 
     try {
       const response = await fetch(makePuzzleImageRequestUrl())
@@ -36,32 +40,30 @@ const useAppController = () => {
         throw new Error('Puzzle image endpoint returned no imageUrl')
       }
 
-      dispatch(appActions.setPictureAttribution(payload.attribution || null))
-      dispatch(appActions.loadPicture(payload.imageUrl))
+      dispatch(
+        appActions.webImageFetchSucceeded({
+          attribution: payload.attribution || null,
+          imageUrl: payload.imageUrl,
+        })
+      )
     } catch (error) {
       console.error(error)
-      dispatch(appActions.setButtonState(true))
+      dispatch(appActions.webImageFetchFailed())
     }
   }, [])
 
-  // Uses user-provided image data URL as puzzle source.
   const handleUploadPicture = useCallback(dataURL => {
-    dispatch(appActions.setPictureAttribution(null))
-    dispatch(appActions.loadPicture(dataURL))
-  }, [])
-
-  // Enables/disables load/upload controls during board lifecycle.
-  const setButtonState = useCallback(flag => {
-    dispatch(appActions.setButtonState(flag))
+    dispatch(appActions.startUploadFromDevice(dataURL))
   }, [])
 
   return {
     picture,
     pictureAttribution,
-    isButtonDisabled,
+    isPictureLoading,
+    isPreparingBoard,
     handleLoadPicture,
     handleUploadPicture,
-    setButtonState,
+    setPreparingBoard,
   }
 }
 

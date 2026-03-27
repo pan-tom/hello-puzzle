@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useReducer,
+  useRef,
+} from 'react'
 import imagePieces from '@/shared/lib/imagePieces'
 import * as boardMapTools from './boardMapTools'
 import {
@@ -16,7 +22,7 @@ const useBoardController = ({
   size,
   shifts,
   picture,
-  setButtonState,
+  setPreparingBoard,
 }) => {
   const [state, dispatch] = useReducer(boardReducer, initialBoardState)
   const { boardMap, movableTiles } = state
@@ -63,18 +69,25 @@ const useBoardController = ({
     [commitBoardPosition]
   )
 
+  // Sync before paint when `picture` changes: avoids one frame of old tiles while
+  // isPictureLoading is already false (fetch done) and async init has not run yet.
+  useLayoutEffect(() => {
+    if (!picture) {
+      return
+    }
+    boardMapTools.clearShuffleInterval()
+    dispatch(boardActions.resetForNewPicture())
+  }, [picture])
+
   useEffect(() => {
     let cancelled = false
 
-    // Full board setup flow for a new picture:
-    // reset -> slice image -> build board -> shuffle -> activate user input.
+    // Async: slice image -> build board -> shuffle -> activate user input.
+    // Reset/clear already applied in useLayoutEffect when picture changed.
     const initializeBoard = async () => {
       if (!picture) {
         return
       }
-
-      boardMapTools.clearShuffleInterval()
-      dispatch(boardActions.resetForNewPicture())
 
       const pieces = await imagePieces.make({
         picture,
@@ -98,7 +111,6 @@ const useBoardController = ({
           boardImages: pieces,
         })
       )
-      setButtonState(true)
 
       await boardMapTools.shuffleItems(shifts, {
         getMovableTiles: () => movableTilesRef.current,
@@ -106,33 +118,34 @@ const useBoardController = ({
       })
 
       if (cancelled) {
+        setPreparingBoard(false)
         return
       }
 
       dispatch(boardActions.setBoardActive(true))
+      setPreparingBoard(false)
     }
 
-    initializeBoard()
-      .catch(error => {
-        if (cancelled) {
-          return
-        }
-        console.error(error)
-        dispatch(
-          boardActions.setInitializedBoard({
-            boardMap: [],
-            movableTiles: [],
-            boardImages: [],
-          })
-        )
-        setButtonState(true)
-      })
+    initializeBoard().catch(error => {
+      if (cancelled) {
+        return
+      }
+      console.error(error)
+      dispatch(
+        boardActions.setInitializedBoard({
+          boardMap: [],
+          movableTiles: [],
+          boardImages: [],
+        })
+      )
+      setPreparingBoard(false)
+    })
 
     return () => {
       cancelled = true
       boardMapTools.clearShuffleInterval()
     }
-  }, [cols, moveBoardTile, picture, rows, setButtonState, shifts, size])
+  }, [cols, moveBoardTile, picture, rows, setPreparingBoard, shifts, size])
 
   return {
     ...state,

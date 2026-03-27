@@ -1,9 +1,9 @@
 import React from 'react'
 import Board from '@/components/board'
-import Button from '@/shared/ui/button'
-import Upload from '@/shared/ui/upload'
+import { PictureAttribution, PictureSourceActions } from '@/components/picture'
 import AppGlobalStyle from '@/shared/styles/AppGlobalStyle'
-import PictureAttribution from './PictureAttribution'
+import { AppShell } from './App.styles'
+import AppHeader from './AppHeader'
 import useAppController from './useAppController'
 
 // Top-level app composition: puzzle board + user actions.
@@ -11,33 +11,41 @@ const App = () => {
   const {
     picture,
     pictureAttribution,
-    isButtonDisabled,
+    isPictureLoading,
+    isPreparingBoard,
     handleLoadPicture,
     handleUploadPicture,
-    setButtonState,
+    setPreparingBoard,
   } = useAppController()
 
   return (
     <>
       <AppGlobalStyle />
-      <Board
-        cols={4}
-        rows={4}
-        shifts={20}
-        size={80}
-        picture={picture}
-        setButtonState={setButtonState}
-      />
 
-      <Button onClick={handleLoadPicture} disabled={isButtonDisabled}>
-        Load from web
-      </Button>
+      <AppShell>
+        <AppHeader />
 
-      <Upload onComplete={handleUploadPicture} disabled={isButtonDisabled}>
-        Upload from device
-      </Upload>
+        <Board
+          cols={4}
+          rows={4}
+          shifts={20}
+          size={80}
+          picture={picture}
+          isPictureLoading={isPictureLoading}
+          setPreparingBoard={setPreparingBoard}
+        />
 
-      {!isButtonDisabled && <PictureAttribution attribution={pictureAttribution} />}
+        <PictureAttribution
+          isVisible={!!pictureAttribution && !isPictureLoading}
+          attribution={pictureAttribution}
+        />
+
+        <PictureSourceActions
+          isDisabled={isPreparingBoard}
+          onLoadFromWeb={handleLoadPicture}
+          onUploadFromDevice={handleUploadPicture}
+        />
+      </AppShell>
     </>
   )
 }

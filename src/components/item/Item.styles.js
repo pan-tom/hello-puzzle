@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-const TileButton = styled.button`
+export const TileButton = styled.button`
   position: absolute;
   z-index: 1;
   display: flex;
@@ -39,7 +39,7 @@ const TileButton = styled.button`
     `}
 `
 
-const TileImage = styled.img`
+export const TileImage = styled.img`
   display: block;
   width: 100%;
   height: auto;
@@ -53,5 +53,3 @@ const TileImage = styled.img`
       opacity: 0;
     `}
 `
-
-export { TileButton, TileImage }
