@@ -13,7 +13,7 @@ const PictureAttribution = ({ visible, attribution }) => (
         <AttributionLink
           href={attribution.photographerUrl}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           {attribution.photographerName}
         </AttributionLink>{' '}
@@ -21,7 +21,7 @@ const PictureAttribution = ({ visible, attribution }) => (
         <AttributionLink
           href={attribution.unsplashUrl}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           Unsplash
         </AttributionLink>

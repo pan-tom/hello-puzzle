@@ -1,8 +1,16 @@
 # Hello Puzzle
 
-Sliding puzzle game built with React + Vite.
+**Hello Puzzle** is a sliding tile puzzle: shuffle pieces, then slide them back into order. You can load a random image (via the Unsplash API) or upload a picture from your device. The app is not named after Unsplash and does not use Unsplash’s logo.
 
 Online demo: https://hello-puzzle.netlify.app
+
+## Unsplash API (submission checklist)
+
+- **Hotlink:** The client loads images from Unsplash URLs returned under `photo.urls` (800×800 crop params on the CDN URL), not a rehosted file.
+- **Download:** The Netlify function calls `GET` on `links.download_location` (unchanged) so usage is reported to Unsplash.
+- **Attribution:** UI shows **Photo by [photographer] on Unsplash** with links to the photographer’s profile and [unsplash.com](https://unsplash.com/) (with `utm_medium=referral`).
+- **Naming:** Product name is **Hello Puzzle** — not “Unsplash” or similar. For the Unsplash developer portal, use the same name and this description so reviewers can tell what the app does.
+- **Screenshots:** Add screenshots of the puzzle + attribution line when you apply for production access or rate limits.
 
 ## Stack
 

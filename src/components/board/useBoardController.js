@@ -10,14 +10,7 @@ import {
 } from './boardState'
 
 // Controls puzzle lifecycle: initialize, shuffle, moves, solved state.
-const useBoardController = ({
-  cols,
-  rows,
-  size,
-  shifts,
-  picture,
-  setPictureLoading,
-}) => {
+const useBoardController = ({ cols, rows, size, shifts, picture }) => {
   const [state, dispatch] = useReducer(boardReducer, initialBoardState)
   const { boardMap, movableTiles } = state
 
@@ -98,7 +91,6 @@ const useBoardController = ({
           boardImages: pieces,
         })
       )
-      setPictureLoading(false)
 
       await boardMapTools.shuffleItems(shifts, {
         getMovableTiles: () => movableTilesRef.current,
@@ -124,14 +116,13 @@ const useBoardController = ({
           boardImages: [],
         })
       )
-      setPictureLoading(false)
     })
 
     return () => {
       cancelled = true
       boardMapTools.clearShuffleInterval()
     }
-  }, [cols, moveBoardTile, picture, rows, setPictureLoading, shifts, size])
+  }, [cols, moveBoardTile, picture, rows, shifts, size])
 
   return {
     ...state,

@@ -2,6 +2,7 @@
   "name": "hello-puzzle",
   "version": "0.9.0",
   "private": true,
+  "description": "Sliding tile puzzle (React + Vite). Load a random image via Unsplash API or upload your own. Unrelated to Unsplash branding; see README for API attribution.",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"
