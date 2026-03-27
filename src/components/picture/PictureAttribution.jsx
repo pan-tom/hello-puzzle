@@ -5,9 +5,9 @@ import {
   AttributionLink,
 } from './PictureAttribution.styles'
 
-const PictureAttribution = ({ enabled, attribution }) => (
+const PictureAttribution = ({ visible, attribution }) => (
   <Attribution>
-    {enabled && attribution && (
+    {visible && attribution && (
       <AttributionText>
         Photo by{' '}
         <AttributionLink

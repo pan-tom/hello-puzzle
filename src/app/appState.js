@@ -1,6 +1,6 @@
 const APP_ACTIONS = {
   LOAD_PICTURE: 'LOAD_PICTURE',
-  SET_BUTTON_STATE: 'SET_BUTTON_STATE',
+  SET_PICTURE_LOADING: 'SET_PICTURE_LOADING',
   SET_PICTURE_ATTRIBUTION: 'SET_PICTURE_ATTRIBUTION',
 }
 
@@ -8,7 +8,7 @@ const APP_ACTIONS = {
 export const initialAppState = {
   picture: null,
   pictureAttribution: null,
-  isButtonDisabled: false,
+  isPictureLoading: false,
 }
 
 // Action creators keep dispatch payloads consistent.
@@ -17,9 +17,9 @@ export const appActions = {
     type: APP_ACTIONS.LOAD_PICTURE,
     payload: pictureUrl,
   }),
-  setButtonState: isEnabled => ({
-    type: APP_ACTIONS.SET_BUTTON_STATE,
-    payload: isEnabled,
+  setPictureLoading: isLoading => ({
+    type: APP_ACTIONS.SET_PICTURE_LOADING,
+    payload: isLoading,
   }),
   setPictureAttribution: attribution => ({
     type: APP_ACTIONS.SET_PICTURE_ATTRIBUTION,
@@ -33,13 +33,13 @@ export const appReducer = (state, action) => {
     case APP_ACTIONS.LOAD_PICTURE:
       return {
         ...state,
-        isButtonDisabled: true,
+        isPictureLoading: true,
         picture: action.payload,
       }
-    case APP_ACTIONS.SET_BUTTON_STATE:
+    case APP_ACTIONS.SET_PICTURE_LOADING:
       return {
         ...state,
-        isButtonDisabled: !action.payload,
+        isPictureLoading: action.payload,
       }
     case APP_ACTIONS.SET_PICTURE_ATTRIBUTION:
       return {

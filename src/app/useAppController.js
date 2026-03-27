@@ -9,11 +9,11 @@ import {
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, pictureAttribution, isButtonDisabled } = state
+  const { picture, pictureAttribution, isPictureLoading } = state
 
   // Requests Unsplash metadata through Netlify and starts board initialization.
   const handleLoadPicture = useCallback(async () => {
-    dispatch(appActions.setButtonState(false))
+    dispatch(appActions.setPictureLoading(true))
 
     try {
       const response = await fetch(makePuzzleImageRequestUrl())
@@ -40,7 +40,7 @@ const useAppController = () => {
       dispatch(appActions.loadPicture(payload.imageUrl))
     } catch (error) {
       console.error(error)
-      dispatch(appActions.setButtonState(true))
+      dispatch(appActions.setPictureLoading(false))
     }
   }, [])
 
@@ -51,17 +51,17 @@ const useAppController = () => {
   }, [])
 
   // Enables/disables load/upload controls during board lifecycle.
-  const setButtonState = useCallback(flag => {
-    dispatch(appActions.setButtonState(flag))
+  const setPictureLoading = useCallback(flag => {
+    dispatch(appActions.setPictureLoading(flag))
   }, [])
 
   return {
     picture,
     pictureAttribution,
-    isButtonDisabled,
+    isPictureLoading,
     handleLoadPicture,
     handleUploadPicture,
-    setButtonState,
+    setPictureLoading,
   }
 }
 

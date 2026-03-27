@@ -16,7 +16,7 @@ const useBoardController = ({
   size,
   shifts,
   picture,
-  setButtonState,
+  setPictureLoading,
 }) => {
   const [state, dispatch] = useReducer(boardReducer, initialBoardState)
   const { boardMap, movableTiles } = state
@@ -98,7 +98,7 @@ const useBoardController = ({
           boardImages: pieces,
         })
       )
-      setButtonState(true)
+      setPictureLoading(false)
 
       await boardMapTools.shuffleItems(shifts, {
         getMovableTiles: () => movableTilesRef.current,
@@ -124,14 +124,14 @@ const useBoardController = ({
           boardImages: [],
         })
       )
-      setButtonState(true)
+      setPictureLoading(false)
     })
 
     return () => {
       cancelled = true
       boardMapTools.clearShuffleInterval()
     }
-  }, [cols, moveBoardTile, picture, rows, setButtonState, shifts, size])
+  }, [cols, moveBoardTile, picture, rows, setPictureLoading, shifts, size])
 
   return {
     ...state,

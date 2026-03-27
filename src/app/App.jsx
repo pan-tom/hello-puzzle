@@ -9,10 +9,10 @@ const App = () => {
   const {
     picture,
     pictureAttribution,
-    isButtonDisabled,
+    isPictureLoading,
     handleLoadPicture,
     handleUploadPicture,
-    setButtonState,
+    setPictureLoading,
   } = useAppController()
 
   return (
@@ -25,16 +25,16 @@ const App = () => {
         shifts={20}
         size={80}
         picture={picture}
-        setButtonState={setButtonState}
+        setPictureLoading={setPictureLoading}
       />
 
       <PictureAttribution
-        enabled={!isButtonDisabled}
+        visible={!isPictureLoading}
         attribution={pictureAttribution}
       />
 
       <PictureSourceActions
-        disabled={isButtonDisabled}
+        disabled={isPictureLoading}
         onLoadFromWeb={handleLoadPicture}
         onUploadFromDevice={handleUploadPicture}
       />

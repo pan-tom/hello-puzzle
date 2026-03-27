@@ -60,7 +60,7 @@ const fetchUnsplashPhoto = async (topic, accessKey) => {
 
   return {
     imageUrl: imageUrl.toString(),
-    downloadLocation: createUnsplashLink(payload.links.download_location),
+    downloadLocation: payload.links.download_location,
     attribution: {
       photographerName: payload.user.name,
       photographerUrl: createUnsplashLink(payload.user.links.html),
