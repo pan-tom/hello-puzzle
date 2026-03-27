@@ -1,10 +1,10 @@
 import * as boardMapTools from './boardMapTools'
 
 // Produces a detached board copy before mutating operations.
-const cloneBoardTiles = boardMap => boardMap.map(tile => ({ ...tile }))
+export const cloneBoardTiles = boardMap => boardMap.map(tile => ({ ...tile }))
 
 // Single source of truth for board UI/gameplay state.
-const initialBoardState = {
+export const initialBoardState = {
   loading: false,
   boardMap: [],
   boardImages: [],
@@ -22,7 +22,7 @@ const ACTIONS = {
 }
 
 // Action creators keep board updates explicit and predictable.
-const boardActions = {
+export const boardActions = {
   resetForNewPicture: () => ({ type: ACTIONS.RESET_FOR_NEW_PICTURE }),
   setInitializedBoard: ({ boardMap, movableTiles, boardImages }) => ({
     type: ACTIONS.SET_INITIALIZED_BOARD,
@@ -40,7 +40,7 @@ const boardActions = {
 }
 
 // Reducer for board state transitions used by the controller hook.
-const boardReducer = (state, action) => {
+export const boardReducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.RESET_FOR_NEW_PICTURE:
       return {
@@ -78,7 +78,7 @@ const boardReducer = (state, action) => {
 }
 
 // Derives active/movable tile metadata from current board position.
-const deriveBoardPosition = (inputMap, cols) => {
+export const deriveBoardPosition = (inputMap, cols) => {
   const { boardMap, movableTiles } = boardMapTools.deriveMovableTilesState(
     cloneBoardTiles(inputMap),
     cols
@@ -88,12 +88,4 @@ const deriveBoardPosition = (inputMap, cols) => {
     boardMap: [...boardMap],
     movableTiles: [...movableTiles],
   }
-}
-
-export {
-  boardActions,
-  boardReducer,
-  cloneBoardTiles,
-  deriveBoardPosition,
-  initialBoardState,
 }

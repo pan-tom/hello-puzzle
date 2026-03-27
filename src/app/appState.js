@@ -5,14 +5,14 @@ const APP_ACTIONS = {
 }
 
 // App-level state: selected image and control lock state.
-const initialAppState = {
+export const initialAppState = {
   picture: null,
   pictureAttribution: null,
   isButtonDisabled: false,
 }
 
 // Action creators keep dispatch payloads consistent.
-const appActions = {
+export const appActions = {
   loadPicture: pictureUrl => ({
     type: APP_ACTIONS.LOAD_PICTURE,
     payload: pictureUrl,
@@ -28,7 +28,7 @@ const appActions = {
 }
 
 // Handles app state transitions for image loading and button lock.
-const appReducer = (state, action) => {
+export const appReducer = (state, action) => {
   switch (action.type) {
     case APP_ACTIONS.LOAD_PICTURE:
       return {
@@ -61,9 +61,7 @@ const resolveFunctionsOrigin = () => {
 }
 
 // Builds metadata endpoint request with cache-busting query.
-const makePuzzleImageRequestUrl = () => {
+export const makePuzzleImageRequestUrl = () => {
   const base = resolveFunctionsOrigin()
   return `${base}/.netlify/functions/puzzle-image`
 }
-
-export { appActions, appReducer, initialAppState, makePuzzleImageRequestUrl }

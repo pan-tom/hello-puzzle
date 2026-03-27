@@ -4,9 +4,9 @@ import { colors } from '@/shared/styles/tokens'
 const buttonHoverBackground = '#f3f4f6'
 const buttonHoverText = '#0f172a'
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button`
   display: block;
-  margin: 15px auto;
+  margin: 8px auto;
   padding: 10px 20px;
   min-width: 160px;
   background: ${colors.white};
@@ -31,5 +31,3 @@ const StyledButton = styled.button`
     cursor: not-allowed;
   }
 `
-
-export { StyledButton }

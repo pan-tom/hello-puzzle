@@ -32,7 +32,7 @@ const getAdjacentTiles = ({ boardMap, cols }) => {
 }
 
 // Creates solved board coordinates/order for provided dimensions.
-const generateBoard = (cols, rows) => {
+export const generateBoard = (cols, rows) => {
   const tiles = []
   let tileCounter = 0
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -50,7 +50,7 @@ const generateBoard = (cols, rows) => {
 }
 
 // Flags currently movable tiles and returns both updated map + movable set.
-const deriveMovableTilesState = (boardMap, cols) => {
+export const deriveMovableTilesState = (boardMap, cols) => {
   const movableTiles = getAdjacentTiles({ boardMap, cols })
   const boardWithMovableFlags = boardMap.map(tile => {
     tile.active = findIndex(movableTiles, { id: tile.id }) !== -1
@@ -59,7 +59,7 @@ const deriveMovableTilesState = (boardMap, cols) => {
   return { boardMap: boardWithMovableFlags, movableTiles }
 }
 
-const clearShuffleInterval = () => clearInterval(shuffleIntervalId)
+export const clearShuffleInterval = () => clearInterval(shuffleIntervalId)
 
 // Picks next shuffle move with anti-backtrack + low-visit bias for wider spread.
 const pickDiversifiedShuffleMove = ({
@@ -85,7 +85,7 @@ const pickDiversifiedShuffleMove = ({
 }
 
 // Applies a sequence of legal moves to keep puzzle solvable after shuffling.
-const shuffleItems = (steps, { moveTile, getMovableTiles }) => {
+export const shuffleItems = (steps, { moveTile, getMovableTiles }) => {
   let stepCount = 0
   let previousTileId = -1
   const visitCountByOrder = {}
@@ -118,7 +118,7 @@ const shuffleItems = (steps, { moveTile, getMovableTiles }) => {
 }
 
 // Swaps selected tile with empty tile by exchanging positional fields.
-const moveTile = (boardMap, tileId) => {
+export const moveTile = (boardMap, tileId) => {
   const emptyTile = boardMap[findKey(boardMap, { id: 1 })]
   const targetTile = boardMap[findKey(boardMap, { id: tileId })]
   const { col, row, ord } = emptyTile
@@ -132,18 +132,9 @@ const moveTile = (boardMap, tileId) => {
 }
 
 // Checks whether tiles are in solved order.
-const isBoardSolved = boardMap => {
+export const isBoardSolved = boardMap => {
   const orderedBoardMap = orderBy(boardMap, 'ord', 'asc')
   return !orderedBoardMap.some((tile, index) => {
     return index > 0 && tile.id !== orderedBoardMap[index - 1].id + 1
   })
-}
-
-export {
-  isBoardSolved,
-  clearShuffleInterval,
-  deriveMovableTilesState,
-  generateBoard,
-  moveTile,
-  shuffleItems,
 }

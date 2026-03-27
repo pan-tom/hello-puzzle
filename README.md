@@ -71,6 +71,9 @@ src/
     loading/                # loading spinner component
       Loading.jsx
       Loading.styles.js
+    picture/                # image source + Unsplash attribution UI
+      PictureAttribution.jsx
+      PictureSourceActions.jsx
   shared/
     ui/                     # shared UI primitives
       button/
@@ -100,6 +103,7 @@ Examples:
 
 - `@/app/App`
 - `@/components/board`
+- `@/components/picture`
 - `@/shared/ui/button`
 
 ## Styling Conventions
