@@ -9,7 +9,7 @@ import {
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, pictureAttribution, isPictureLoading, isPreparingBoard } =
+  const { pictureUrl, pictureAttribution, isPictureLoading, isPreparingBoard } =
     state
 
   const setPreparingBoard = useCallback(preparing => {
@@ -57,7 +57,7 @@ const useAppController = () => {
   }, [])
 
   return {
-    picture,
+    pictureUrl,
     pictureAttribution,
     isPictureLoading,
     isPreparingBoard,

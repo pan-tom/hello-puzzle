@@ -19,9 +19,9 @@ import {
 const useBoardController = ({
   cols,
   rows,
-  size,
-  shifts,
-  picture,
+  tileSize,
+  shuffleSteps,
+  pictureUrl,
   setPreparingBoard,
 }) => {
   const [state, dispatch] = useReducer(boardReducer, initialBoardState)
@@ -58,8 +58,8 @@ const useBoardController = ({
         tileId
       )
       const solved = boardMapTools.isBoardSolved(movedBoardMap)
-
       commitBoardPosition(movedBoardMap)
+
       if (solved) {
         setTimeout(() => {
           dispatch(boardActions.setBoardDone())
@@ -69,29 +69,29 @@ const useBoardController = ({
     [commitBoardPosition]
   )
 
-  // Sync before paint when `picture` changes: avoids one frame of old tiles while
+  // Sync before paint when `pictureUrl` changes: avoids one frame of old tiles while
   // isPictureLoading is already false (fetch done) and async init has not run yet.
   useLayoutEffect(() => {
-    if (!picture) {
+    if (!pictureUrl) {
       return
     }
     boardMapTools.clearShuffleInterval()
     dispatch(boardActions.resetForNewPicture())
-  }, [picture])
+  }, [pictureUrl])
 
   useEffect(() => {
     let cancelled = false
 
     // Async: slice image -> build board -> shuffle -> activate user input.
-    // Reset/clear already applied in useLayoutEffect when picture changed.
+    // Reset/clear already applied in useLayoutEffect when pictureUrl changed.
     const initializeBoard = async () => {
-      if (!picture) {
+      if (!pictureUrl) {
         return
       }
 
       const pieces = await imagePieces.make({
-        picture,
-        size,
+        pictureUrl,
+        tileSize,
         cols,
         rows,
       })
@@ -112,7 +112,7 @@ const useBoardController = ({
         })
       )
 
-      await boardMapTools.shuffleItems(shifts, {
+      await boardMapTools.shuffleItems(shuffleSteps, {
         getMovableTiles: () => movableTilesRef.current,
         moveTile: tileId => moveBoardTile(tileId),
       })
@@ -145,7 +145,15 @@ const useBoardController = ({
       cancelled = true
       boardMapTools.clearShuffleInterval()
     }
-  }, [cols, moveBoardTile, picture, rows, setPreparingBoard, shifts, size])
+  }, [
+    cols,
+    rows,
+    tileSize,
+    shuffleSteps,
+    pictureUrl,
+    setPreparingBoard,
+    moveBoardTile,
+  ])
 
   return {
     ...state,

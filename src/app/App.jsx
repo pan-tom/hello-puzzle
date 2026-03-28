@@ -9,7 +9,7 @@ import useAppController from './useAppController'
 // Top-level app composition: puzzle board + user actions.
 const App = () => {
   const {
-    picture,
+    pictureUrl,
     pictureAttribution,
     isPictureLoading,
     isPreparingBoard,
@@ -28,9 +28,9 @@ const App = () => {
         <Board
           cols={4}
           rows={4}
-          shifts={20}
-          size={80}
-          picture={picture}
+          shuffleSteps={20}
+          tileSize={80}
+          pictureUrl={pictureUrl}
           isPictureLoading={isPictureLoading}
           setPreparingBoard={setPreparingBoard}
         />

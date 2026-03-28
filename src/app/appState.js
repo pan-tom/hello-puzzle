@@ -8,7 +8,7 @@ const APP_ACTIONS = {
 
 // App-level state: selected image and preparing board state.
 export const initialAppState = {
-  picture: null,
+  pictureUrl: null,
   pictureAttribution: null,
   isPictureLoading: false,
   isPreparingBoard: false,
@@ -47,7 +47,7 @@ export const appReducer = (state, action) => {
         ...state,
         pictureAttribution: attribution,
         isPictureLoading: false,
-        picture: imageUrl,
+        pictureUrl: imageUrl,
       }
     }
     case APP_ACTIONS.WEB_IMAGE_FETCH_FAILED:
@@ -61,7 +61,7 @@ export const appReducer = (state, action) => {
         ...state,
         pictureAttribution: null,
         isPreparingBoard: true,
-        picture: action.payload,
+        pictureUrl: action.payload,
       }
     case APP_ACTIONS.SET_PREPARING_BOARD:
       return {
@@ -78,7 +78,6 @@ const resolveFunctionsOrigin = () => {
   if (configuredOrigin) {
     return configuredOrigin.replace(/\/$/, '')
   }
-
   return ''
 }
 

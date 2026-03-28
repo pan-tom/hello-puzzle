@@ -12,7 +12,7 @@ const Upload = ({ children, disabled, onComplete }) => {
   const handleFileChange = event => {
     const reader = new FileReader()
     reader.readAsDataURL(event.target.files[0])
-    reader.onload = e => onComplete(e.target.result)
+    reader.onload = ({ target }) => onComplete(target.result)
   }
 
   return (

@@ -6,9 +6,9 @@ import useBoardController from './useBoardController'
 const Board = ({
   cols,
   rows,
-  size,
-  shifts,
-  picture,
+  tileSize,
+  shuffleSteps,
+  pictureUrl,
   isPictureLoading,
   setPreparingBoard,
 }) => {
@@ -16,9 +16,9 @@ const Board = ({
     useBoardController({
       cols,
       rows,
-      size,
-      shifts,
-      picture,
+      tileSize,
+      shuffleSteps,
+      pictureUrl,
       setPreparingBoard,
     })
 
@@ -26,7 +26,7 @@ const Board = ({
     <BoardView
       cols={cols}
       rows={rows}
-      size={size}
+      tileSize={tileSize}
       isInitializing={isInitializing}
       isPictureLoading={isPictureLoading}
       boardMap={boardMap}
