@@ -1,6 +1,6 @@
 import React from 'react'
 import Board from '@/components/board'
-import { PictureAttribution, PictureSourceActions } from '@/components/picture'
+import { PictureMetaSection, PictureSourceActions } from '@/components/picture'
 import AppGlobalStyle from '@/shared/styles/AppGlobalStyle'
 import { AppShell } from './App.styles'
 import AppHeader from './AppHeader'
@@ -9,8 +9,9 @@ import useAppController from './useAppController'
 // Top-level app composition: puzzle board + user actions.
 const App = () => {
   const {
-    picture,
+    pictureUrl,
     pictureAttribution,
+    pictureFetchError,
     isPictureLoading,
     isPreparingBoard,
     handleLoadPicture,
@@ -28,16 +29,17 @@ const App = () => {
         <Board
           cols={4}
           rows={4}
-          shifts={20}
-          size={80}
-          picture={picture}
+          shuffleSteps={20}
+          tileSize={80}
+          pictureUrl={pictureUrl}
           isPictureLoading={isPictureLoading}
           setPreparingBoard={setPreparingBoard}
         />
 
-        <PictureAttribution
-          isVisible={!!pictureAttribution && !isPictureLoading}
-          attribution={pictureAttribution}
+        <PictureMetaSection
+          pictureFetchError={pictureFetchError}
+          isPictureLoading={isPictureLoading}
+          pictureAttribution={pictureAttribution}
         />
 
         <PictureSourceActions

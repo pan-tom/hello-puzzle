@@ -8,9 +8,10 @@ const APP_ACTIONS = {
 
 // App-level state: selected image and preparing board state.
 export const initialAppState = {
-  picture: null,
+  pictureUrl: null,
   pictureAttribution: null,
   isPictureLoading: false,
+  pictureFetchError: null,
   isPreparingBoard: false,
 }
 
@@ -21,7 +22,10 @@ export const appActions = {
     type: APP_ACTIONS.WEB_IMAGE_FETCH_SUCCEEDED,
     payload: { attribution, imageUrl },
   }),
-  webImageFetchFailed: () => ({ type: APP_ACTIONS.WEB_IMAGE_FETCH_FAILED }),
+  webImageFetchFailed: message => ({
+    type: APP_ACTIONS.WEB_IMAGE_FETCH_FAILED,
+    payload: message,
+  }),
   startUploadFromDevice: dataURL => ({
     type: APP_ACTIONS.START_UPLOAD_FROM_DEVICE,
     payload: dataURL,
@@ -38,30 +42,38 @@ export const appReducer = (state, action) => {
       return {
         ...state,
         isPictureLoading: true,
-        isPreparingBoard: true,
         pictureAttribution: null,
+        pictureFetchError: null,
+        isPreparingBoard: true,
       }
     case APP_ACTIONS.WEB_IMAGE_FETCH_SUCCEEDED: {
       const { attribution, imageUrl } = action.payload
       return {
         ...state,
-        pictureAttribution: attribution,
         isPictureLoading: false,
-        picture: imageUrl,
+        pictureAttribution: attribution,
+        pictureUrl: imageUrl,
+        pictureFetchError: null,
       }
     }
     case APP_ACTIONS.WEB_IMAGE_FETCH_FAILED:
       return {
         ...state,
         isPictureLoading: false,
+        pictureAttribution: null,
         isPreparingBoard: false,
+        pictureFetchError:
+          typeof action.payload === 'string' && action.payload
+            ? action.payload
+            : 'Could not load an image from the web.',
       }
     case APP_ACTIONS.START_UPLOAD_FROM_DEVICE:
       return {
         ...state,
         pictureAttribution: null,
+        pictureUrl: action.payload,
+        pictureFetchError: null,
         isPreparingBoard: true,
-        picture: action.payload,
       }
     case APP_ACTIONS.SET_PREPARING_BOARD:
       return {
@@ -73,17 +85,8 @@ export const appReducer = (state, action) => {
   }
 }
 
-const resolveFunctionsOrigin = () => {
-  const configuredOrigin = import.meta.env.VITE_FUNCTIONS_ORIGIN
-  if (configuredOrigin) {
-    return configuredOrigin.replace(/\/$/, '')
-  }
-
-  return ''
-}
-
 // Builds metadata endpoint request with cache-busting query.
 export const makePuzzleImageRequestUrl = () => {
-  const base = resolveFunctionsOrigin()
-  return `${base}/.netlify/functions/puzzle-image`
+  const origin = import.meta.env.VITE_FUNCTIONS_ORIGIN || ''
+  return `${origin}/.netlify/functions/puzzle-image`
 }

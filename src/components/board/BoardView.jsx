@@ -7,7 +7,7 @@ import { BoardContainer } from './BoardView.styles'
 const BoardView = ({
   cols,
   rows,
-  size,
+  tileSize,
   isInitializing,
   isPictureLoading,
   boardMap,
@@ -15,20 +15,15 @@ const BoardView = ({
   isBoardActive,
   onTileClick,
 }) => (
-  <BoardContainer
-    style={{
-      width: size * cols,
-      height: size * rows,
-    }}
-  >
+  <BoardContainer $tileSize={tileSize} $cols={cols} $rows={rows}>
     {isInitializing || isPictureLoading ? (
       <Loading />
     ) : (
       boardMap.map(tile => (
         <Item
           key={tile.id}
-          size={size}
           tile={tile}
+          tileSize={tileSize}
           image={boardImages[tile.id - 1] || ''}
           isBoardActive={isBoardActive}
           onTileClick={onTileClick}

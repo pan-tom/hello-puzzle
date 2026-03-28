@@ -9,8 +9,13 @@ import {
 // Encapsulates app-level state transitions and UI handlers.
 const useAppController = () => {
   const [state, dispatch] = useReducer(appReducer, initialAppState)
-  const { picture, pictureAttribution, isPictureLoading, isPreparingBoard } =
-    state
+  const {
+    pictureUrl,
+    pictureAttribution,
+    pictureFetchError,
+    isPictureLoading,
+    isPreparingBoard,
+  } = state
 
   const setPreparingBoard = useCallback(preparing => {
     dispatch(appActions.setPreparingBoard(preparing))
@@ -48,7 +53,11 @@ const useAppController = () => {
       )
     } catch (error) {
       console.error(error)
-      dispatch(appActions.webImageFetchFailed())
+      const message =
+        error instanceof Error && error.message
+          ? error.message.slice(0, 240)
+          : 'Could not load an image from the web.'
+      dispatch(appActions.webImageFetchFailed(message))
     }
   }, [])
 
@@ -57,8 +66,9 @@ const useAppController = () => {
   }, [])
 
   return {
-    picture,
+    pictureUrl,
     pictureAttribution,
+    pictureFetchError,
     isPictureLoading,
     isPreparingBoard,
     handleLoadPicture,
