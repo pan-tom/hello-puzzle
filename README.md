@@ -25,14 +25,14 @@ Online demo: https://hello-puzzle.netlify.app
 
 ## Environment Variables
 
-- `UNSPLASH_ACCESS_KEY` (required, for Netlify function image provider)
+- `UNSPLASH_ACCESS_KEY` (required for the puzzle-image function on Netlify / `netlify dev`).
+- `VITE_FUNCTIONS_ORIGIN` (optional, local only): set in `.env.development` when you run **`npm run dev:vite`** while Netlify Functions are served separately (e.g. `http://localhost:8888` from `netlify dev`). **`npm run dev`** proxies the app and functions together; relative `/.netlify/functions/puzzle-image` is enough in production.
 
 ## Netlify Functions
 
-- Functions live in `netlify/functions/`.
-- Puzzle image endpoint: `/.netlify/functions/puzzle-image`.
-- The function returns JSON metadata (`imageUrl`, `attribution`) and the app loads the returned Unsplash image URL.
-- Local dev with functions: use `npm run dev`.
+- Functions live under `netlify/functions/`. The puzzle image handler is the directory **`puzzle-image/`** (entry `index.js`); the URL stays **`/.netlify/functions/puzzle-image`**.
+- It returns JSON (`imageUrl`, `attribution`); the client loads the Unsplash CDN URL from `imageUrl`.
+- Local dev with Vite + functions: **`npm run dev`** (Netlify Dev + Vite).
 
 ## Scripts
 
@@ -63,8 +63,12 @@ Then open the URL printed by the dev server.
 src/
   app/                      # app shell + app-level state/controller
     App.jsx
+    App.styles.js
+    AppHeader.jsx
+    AppHeader.styles.js
     useAppController.js
     appState.js
+    index.js
   components/
     board/                  # board orchestration + domain logic
       Board.jsx
@@ -73,15 +77,20 @@ src/
       boardState.js
       useBoardController.js
       BoardView.styles.js
+      index.js
     item/                   # puzzle tile component
       Item.jsx
       Item.styles.js
     loading/                # loading spinner component
       Loading.jsx
       Loading.styles.js
-    picture/                # image source + Unsplash attribution UI
-      PictureAttribution.jsx
+    picture/                # image source + meta band (attribution / fetch errors)
+      PictureMetaSection.jsx
+      PictureMetaSection.styles.js
+      PictureAttribution.styles.js   # shared layout tokens + attribution links
       PictureSourceActions.jsx
+      PictureSourceActions.styles.js
+      index.js
   shared/
     ui/                     # shared UI primitives
       button/
@@ -98,7 +107,12 @@ src/
   index.jsx
 netlify/
   functions/
-    puzzle-image.js            # Unsplash fetch + download tracking + attribution payload
+    puzzle-image/           # Unsplash random photo + download ping + JSON for client
+      index.js              # HTTP handler
+      constants.js
+      responses.js
+      urlUtils.js
+      unsplash.js
 ```
 
 ## Import Aliases
