@@ -15,11 +15,22 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
-const createUnsplashLink = rawUrl => {
-  const url = new URL(rawUrl)
-  url.searchParams.set('utm_source', UTM_SOURCE)
-  url.searchParams.set('utm_medium', UTM_MEDIUM)
-  return url.toString()
+const tryParseUrl = rawUrl => {
+  if (typeof rawUrl !== 'string' || rawUrl.length === 0) {
+    return null
+  }
+  try {
+    return new URL(rawUrl)
+  } catch {
+    return null
+  }
+}
+
+const withUnsplashUtm = url => {
+  const next = new URL(url.href)
+  next.searchParams.set('utm_source', UTM_SOURCE)
+  next.searchParams.set('utm_medium', UTM_MEDIUM)
+  return next.toString()
 }
 
 const toJsonResponse = payload => {
@@ -51,27 +62,42 @@ const fetchUnsplashPhoto = async (topic, accessKey) => {
   }
 
   const payload = await randomResponse.json()
-  if (!payload?.urls || !payload?.links?.download_location || !payload?.user) {
+  const urls = payload?.urls
+  const baseImageUrl =
+    (typeof urls?.raw === 'string' && urls.raw) ||
+    (typeof urls?.regular === 'string' && urls.regular)
+  if (
+    !baseImageUrl ||
+    !payload?.links?.download_location ||
+    typeof payload?.user?.name !== 'string' ||
+    typeof payload?.user?.links?.html !== 'string'
+  ) {
     throw new Error(`No Unsplash results for "${topic}"`)
   }
 
-  const imageUrl = new URL(payload.urls.raw || payload.urls.regular)
-  imageUrl.searchParams.set('w', '800')
-  imageUrl.searchParams.set('h', '800')
-  imageUrl.searchParams.set('fit', 'crop')
-  imageUrl.searchParams.set('crop', 'entropy')
-  imageUrl.searchParams.set('auto', 'format')
-  imageUrl.searchParams.set('q', '80')
-  imageUrl.searchParams.set('utm_source', UTM_SOURCE)
-  imageUrl.searchParams.set('utm_medium', UTM_MEDIUM)
+  const imageUrlObj = tryParseUrl(baseImageUrl)
+  const photographerUrlObj = tryParseUrl(payload.user.links.html)
+  const unsplashSiteUrlObj = tryParseUrl(UNSPLASH_SITE_URL)
+  if (!imageUrlObj || !photographerUrlObj || !unsplashSiteUrlObj) {
+    throw new Error(`No Unsplash results for "${topic}"`)
+  }
+
+  imageUrlObj.searchParams.set('w', '800')
+  imageUrlObj.searchParams.set('h', '800')
+  imageUrlObj.searchParams.set('fit', 'crop')
+  imageUrlObj.searchParams.set('crop', 'entropy')
+  imageUrlObj.searchParams.set('auto', 'format')
+  imageUrlObj.searchParams.set('q', '80')
+  imageUrlObj.searchParams.set('utm_source', UTM_SOURCE)
+  imageUrlObj.searchParams.set('utm_medium', UTM_MEDIUM)
 
   return {
-    imageUrl: imageUrl.toString(),
+    imageUrl: imageUrlObj.toString(),
     downloadLocation: payload.links.download_location,
     attribution: {
       photographerName: payload.user.name,
-      photographerUrl: createUnsplashLink(payload.user.links.html),
-      unsplashUrl: createUnsplashLink(UNSPLASH_SITE_URL),
+      photographerUrl: withUnsplashUtm(photographerUrlObj),
+      unsplashUrl: withUnsplashUtm(unsplashSiteUrlObj),
     },
   }
 }

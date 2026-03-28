@@ -1,6 +1,6 @@
 import React from 'react'
 import Board from '@/components/board'
-import { PictureAttribution, PictureSourceActions } from '@/components/picture'
+import { PictureMetaSection, PictureSourceActions } from '@/components/picture'
 import AppGlobalStyle from '@/shared/styles/AppGlobalStyle'
 import { AppShell } from './App.styles'
 import AppHeader from './AppHeader'
@@ -11,6 +11,7 @@ const App = () => {
   const {
     pictureUrl,
     pictureAttribution,
+    pictureFetchError,
     isPictureLoading,
     isPreparingBoard,
     handleLoadPicture,
@@ -35,9 +36,10 @@ const App = () => {
           setPreparingBoard={setPreparingBoard}
         />
 
-        <PictureAttribution
-          isVisible={!!pictureAttribution && !isPictureLoading}
-          attribution={pictureAttribution}
+        <PictureMetaSection
+          pictureFetchError={pictureFetchError}
+          isPictureLoading={isPictureLoading}
+          pictureAttribution={pictureAttribution}
         />
 
         <PictureSourceActions

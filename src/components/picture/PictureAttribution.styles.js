@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import { colors } from '@/shared/styles/tokens'
 
-export const Attribution = styled.div`
+// Shared slot below the board (attribution, fetch errors).
+export const PictureMetaArea = styled.div`
   margin: 10px auto 0;
   max-width: 460px;
   min-height: 30px;
