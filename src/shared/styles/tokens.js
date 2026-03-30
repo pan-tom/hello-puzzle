@@ -3,6 +3,7 @@ export const colors = {
   black: '#111827',
   border: '#d1d5db',
   error: '#b91c1c',
+  focusRing: '#2563eb',
   font: '#4b5563',
   white: '#ffffff',
 }

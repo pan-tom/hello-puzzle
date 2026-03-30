@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 import { colors } from '@/shared/styles/tokens'
 
-export const BoardContainer = styled.div`
-  overflow: hidden;
+export const BoardContainer = styled.section`
   position: relative;
   margin: 0 auto;
   border: solid 1px ${colors.border};

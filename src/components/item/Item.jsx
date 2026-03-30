@@ -1,10 +1,20 @@
 import React from 'react'
 import { TileButton, TileImage } from './Item.styles'
+import { getTileAriaLabel } from './tileAriaLabel'
 
-// Single puzzle tile; clickable only when it is currently movable.
-const Item = ({ tileSize, tile, image, isBoardActive, onTileClick }) => {
+// Single puzzle tile; keyboard/click only when adjacent to the empty slot.
+const Item = ({
+  tileSize,
+  tile,
+  image,
+  isBoardActive,
+  isBoardDone,
+  onTileClick,
+}) => {
   const isMovable = isBoardActive && tile.active
   const isHidden = isBoardActive && tile.id === 1
+  const row = tile.row + 1
+  const col = tile.col + 1
 
   const handleClick = () => {
     if (isMovable) {
@@ -12,9 +22,21 @@ const Item = ({ tileSize, tile, image, isBoardActive, onTileClick }) => {
     }
   }
 
+  const tileAriaLabel = getTileAriaLabel({
+    row,
+    col,
+    isBoardDone,
+    isBoardActive,
+    isHidden,
+    isMovable,
+  })
+
   return (
     <TileButton
+      type="button"
       $isActive={isMovable}
+      disabled={!isMovable}
+      aria-label={tileAriaLabel}
       style={{
         width: tileSize + 'px',
         height: tileSize + 'px',
@@ -24,12 +46,7 @@ const Item = ({ tileSize, tile, image, isBoardActive, onTileClick }) => {
       onClick={handleClick}
     >
       {image && (
-        <TileImage
-          src={image}
-          alt={`piece ${tile.id}`}
-          draggable={false}
-          $isHidden={isHidden}
-        />
+        <TileImage src={image} alt="" draggable={false} $isHidden={isHidden} />
       )}
     </TileButton>
   )

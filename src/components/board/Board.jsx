@@ -12,15 +12,21 @@ const Board = ({
   isPictureLoading,
   setPreparingBoard,
 }) => {
-  const { isInitializing, boardMap, boardImages, isBoardActive, onTileClick } =
-    useBoardController({
-      cols,
-      rows,
-      tileSize,
-      shuffleSteps,
-      pictureUrl,
-      setPreparingBoard,
-    })
+  const {
+    isInitializing,
+    boardMap,
+    boardImages,
+    isBoardActive,
+    isBoardDone,
+    onTileClick,
+  } = useBoardController({
+    cols,
+    rows,
+    tileSize,
+    shuffleSteps,
+    pictureUrl,
+    setPreparingBoard,
+  })
 
   return (
     <BoardView
@@ -32,6 +38,7 @@ const Board = ({
       boardMap={boardMap}
       boardImages={boardImages}
       isBoardActive={isBoardActive}
+      isBoardDone={isBoardDone}
       onTileClick={onTileClick}
     />
   )
