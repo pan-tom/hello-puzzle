@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useId, useRef } from 'react'
 import Button from '@/shared/ui/button'
 import { UploadButtonWrapper } from './Upload.styles'
 
-// Hidden file input wrapped in a styled button.
+// Visually hidden file input; visible button opens picker (still in a11y tree).
 const Upload = ({ children, disabled, onComplete }) => {
   const inputRef = useRef()
+  const inputId = useId()
 
   const handleButtonClick = () => inputRef.current.click()
 
@@ -17,14 +18,21 @@ const Upload = ({ children, disabled, onComplete }) => {
 
   return (
     <UploadButtonWrapper>
-      <Button disabled={disabled} onClick={handleButtonClick}>
+      <Button
+        disabled={disabled}
+        onClick={handleButtonClick}
+        aria-controls={inputId}
+      >
         {children}
       </Button>
       <input
+        id={inputId}
         ref={inputRef}
+        tabIndex={-1}
         onChange={handleFileChange}
         type="file"
         accept="image/jpeg,image/png"
+        aria-label="Choose JPEG or PNG image file"
       />
     </UploadButtonWrapper>
   )

@@ -11,8 +11,12 @@ export const StyledButton = styled.button`
   min-width: 160px;
   background: ${colors.white};
   border: solid 1px ${colors.border};
-  outline: none;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid ${colors.focusRing};
+    outline-offset: 2px;
+  }
   user-select: none;
   color: ${colors.black};
   transition:

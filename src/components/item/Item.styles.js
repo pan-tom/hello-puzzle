@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { colors } from '@/shared/styles/tokens'
 
 export const TileButton = styled.button`
   position: absolute;
@@ -9,7 +10,6 @@ export const TileButton = styled.button`
   user-select: none;
   cursor: default;
   border: none;
-  outline: none;
   background: none;
   margin: 0;
   padding: 0;
@@ -18,6 +18,12 @@ export const TileButton = styled.button`
     top 0.25s ease-out,
     left 0.25s ease-out;
   -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible:enabled {
+    outline: 2px solid ${colors.focusRing};
+    outline-offset: 2px;
+    z-index: 4;
+  }
 
   &:hover,
   &:focus,
@@ -32,7 +38,6 @@ export const TileButton = styled.button`
       z-index: 2;
 
       &:hover,
-      &:focus,
       &:active {
         z-index: 3;
       }
