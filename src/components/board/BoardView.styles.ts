@@ -1,7 +1,13 @@
 import styled from 'styled-components'
 import { colors } from '@/shared/styles/tokens'
 
-export const BoardContainer = styled.section`
+type BoardContainerTransientProps = {
+  $tileSize: number
+  $cols: number
+  $rows: number
+}
+
+export const BoardContainer = styled.section<BoardContainerTransientProps>`
   position: relative;
   margin: 0 auto;
   border: solid 1px ${colors.border};

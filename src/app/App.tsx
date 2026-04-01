@@ -1,4 +1,3 @@
-import React from 'react'
 import Board from '@/components/board'
 import { PictureMetaSection, PictureSourceActions } from '@/components/picture'
 import AppGlobalStyle from '@/shared/styles/AppGlobalStyle'

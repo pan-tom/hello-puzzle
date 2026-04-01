@@ -1,7 +1,15 @@
 import styled, { css } from 'styled-components'
 import { colors } from '@/shared/styles/tokens'
 
-export const TileButton = styled.button`
+type TileButtonTransientProps = {
+  $isActive: boolean
+}
+
+type TileImageTransientProps = {
+  $isHidden: boolean
+}
+
+export const TileButton = styled.button<TileButtonTransientProps>`
   position: absolute;
   z-index: 1;
   display: flex;
@@ -44,7 +52,7 @@ export const TileButton = styled.button`
     `}
 `
 
-export const TileImage = styled.img`
+export const TileImage = styled.img<TileImageTransientProps>`
   display: block;
   width: 100%;
   height: auto;

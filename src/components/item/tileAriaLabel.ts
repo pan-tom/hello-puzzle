@@ -6,7 +6,14 @@ export const getTileAriaLabel = ({
   isBoardActive,
   isHidden,
   isMovable,
-}) => {
+}: {
+  row: number
+  col: number
+  isBoardDone: boolean
+  isBoardActive: boolean
+  isHidden: boolean
+  isMovable: boolean
+}): string => {
   if (isBoardDone) {
     return `Tile row ${row}, column ${col}. Puzzle complete.`
   }

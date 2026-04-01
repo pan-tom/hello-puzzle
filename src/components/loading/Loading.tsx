@@ -1,4 +1,3 @@
-import React from 'react'
 import { LoaderImage } from './Loading.styles'
 
 // Lightweight inline spinner shown during board/image initialization.

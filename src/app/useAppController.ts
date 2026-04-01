@@ -17,7 +17,7 @@ const useAppController = () => {
     isPreparingBoard,
   } = state
 
-  const setPreparingBoard = useCallback(preparing => {
+  const setPreparingBoard = useCallback((preparing: boolean) => {
     dispatch(appActions.setPreparingBoard(preparing))
   }, [])
 
@@ -61,7 +61,7 @@ const useAppController = () => {
     }
   }, [])
 
-  const handleUploadPicture = useCallback(dataURL => {
+  const handleUploadPicture = useCallback((dataURL: string) => {
     dispatch(appActions.startUploadFromDevice(dataURL))
   }, [])
 

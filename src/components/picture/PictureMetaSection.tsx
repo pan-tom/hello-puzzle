@@ -1,17 +1,23 @@
-import React from 'react'
 import {
   PictureMetaArea,
   AttributionLink,
   AttributionText,
 } from './PictureAttribution.styles'
 import { MetaErrorText } from './PictureMetaSection.styles'
+import type { PictureAttribution } from '@/app/appState'
+
+type PictureMetaSectionProps = {
+  pictureFetchError: string | null
+  isPictureLoading: boolean
+  pictureAttribution: PictureAttribution
+}
 
 // Picture metadata section: web fetch error, attribution, or empty.
 const PictureMetaSection = ({
   pictureFetchError,
   isPictureLoading,
   pictureAttribution,
-}) => {
+}: PictureMetaSectionProps) => {
   if (isPictureLoading) {
     return <PictureMetaArea />
   }
