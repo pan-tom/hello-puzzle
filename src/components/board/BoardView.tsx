@@ -1,7 +1,18 @@
-import React from 'react'
 import Item from '@/components/item'
 import Loading from '@/components/loading'
 import { BoardContainer } from './BoardView.styles'
+import type { BoardProps } from './Board'
+import type { BoardMap } from './boardMapTools'
+
+type BoardViewProps = {
+  isInitializing: boolean
+  isPictureLoading: boolean
+  boardMap: BoardMap
+  boardImages: string[]
+  isBoardActive: boolean
+  isBoardDone: boolean
+  onTileClick: (id: number) => void
+} & Pick<BoardProps, 'cols' | 'rows' | 'tileSize'>
 
 // Pure board presentation: layout + rendered tiles/spinner.
 const BoardView = ({
@@ -15,7 +26,7 @@ const BoardView = ({
   isBoardActive,
   isBoardDone,
   onTileClick,
-}) => {
+}: BoardViewProps) => {
   const isBusy = isInitializing || isPictureLoading
 
   return (

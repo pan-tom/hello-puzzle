@@ -1,6 +1,14 @@
-import React from 'react'
 import BoardView from './BoardView'
 import useBoardController from './useBoardController'
+import type { AppState } from '@/app/appState'
+
+export type BoardProps = {
+  cols: number
+  rows: number
+  tileSize: number
+  shuffleSteps: number
+  setPreparingBoard: (preparing: boolean) => void
+} & Pick<AppState, 'pictureUrl' | 'isPictureLoading'>
 
 // Container component: wires board controller state into the view.
 const Board = ({
@@ -11,7 +19,7 @@ const Board = ({
   pictureUrl,
   isPictureLoading,
   setPreparingBoard,
-}) => {
+}: BoardProps) => {
   const {
     isInitializing,
     boardMap,

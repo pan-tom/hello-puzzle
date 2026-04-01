@@ -4,7 +4,7 @@ const APP_ACTIONS = {
   WEB_IMAGE_FETCH_FAILED: 'WEB_IMAGE_FETCH_FAILED',
   START_UPLOAD_FROM_DEVICE: 'START_UPLOAD_FROM_DEVICE',
   SET_PREPARING_BOARD: 'SET_PREPARING_BOARD',
-}
+} as const
 
 // App-level state: selected image and preparing board state.
 export const initialAppState = {
@@ -17,26 +17,49 @@ export const initialAppState = {
 
 // One action per user-visible flow step (board still calls setPreparingBoard for lifecycle).
 export const appActions = {
-  beginWebImageFetch: () => ({ type: APP_ACTIONS.BEGIN_WEB_IMAGE_FETCH }),
-  webImageFetchSucceeded: ({ attribution, imageUrl }) => ({
+  beginWebImageFetch: () => ({
+    type: APP_ACTIONS.BEGIN_WEB_IMAGE_FETCH,
+  }),
+  webImageFetchSucceeded: ({
+    attribution,
+    imageUrl,
+  }: {
+    attribution: PictureAttribution
+    imageUrl: string
+  }) => ({
     type: APP_ACTIONS.WEB_IMAGE_FETCH_SUCCEEDED,
     payload: { attribution, imageUrl },
   }),
-  webImageFetchFailed: message => ({
+  webImageFetchFailed: (message: string) => ({
     type: APP_ACTIONS.WEB_IMAGE_FETCH_FAILED,
     payload: message,
   }),
-  startUploadFromDevice: dataURL => ({
+  startUploadFromDevice: (dataURL: string) => ({
     type: APP_ACTIONS.START_UPLOAD_FROM_DEVICE,
     payload: dataURL,
   }),
-  setPreparingBoard: preparing => ({
+  setPreparingBoard: (preparing: boolean) => ({
     type: APP_ACTIONS.SET_PREPARING_BOARD,
     payload: preparing,
   }),
 }
 
-export const appReducer = (state, action) => {
+export type PictureAttribution = {
+  photographerUrl: string
+  photographerName: string
+  unsplashUrl: string
+} | null
+
+export type AppState = {
+  pictureUrl: string | null
+  pictureAttribution: PictureAttribution
+  isPictureLoading: boolean
+  pictureFetchError: string | null
+  isPreparingBoard: boolean
+}
+export type AppAction = ReturnType<(typeof appActions)[keyof typeof appActions]>
+
+export const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
     case APP_ACTIONS.BEGIN_WEB_IMAGE_FETCH:
       return {

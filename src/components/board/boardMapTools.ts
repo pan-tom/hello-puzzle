@@ -1,9 +1,24 @@
-import { findIndex, findKey, orderBy, random } from 'lodash'
+import { findIndex, orderBy, random } from 'lodash'
 
-let shuffleIntervalId
+let shuffleIntervalId: number
+
+export type Tile = {
+  id: number
+  active: boolean
+  col: number
+  row: number
+  ord: number
+}
+export type BoardMap = Tile[]
 
 // Returns all tiles adjacent to the empty tile (id: 1).
-const getAdjacentTiles = ({ boardMap, cols }) => {
+const getAdjacentTiles = ({
+  boardMap,
+  cols,
+}: {
+  boardMap: BoardMap
+  cols: number
+}): BoardMap => {
   const orderedBoard = orderBy(boardMap, 'ord', 'asc')
   const emptyTile = orderedBoard[findIndex(orderedBoard, { id: 1 })]
   const emptyOrder = emptyTile.ord
@@ -32,7 +47,7 @@ const getAdjacentTiles = ({ boardMap, cols }) => {
 }
 
 // Creates solved board coordinates/order for provided dimensions.
-export const generateBoard = (cols, rows) => {
+export const generateBoard = (cols: number, rows: number): Tile[] => {
   const tiles = []
   let tileCounter = 0
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
@@ -50,7 +65,7 @@ export const generateBoard = (cols, rows) => {
 }
 
 // Flags currently movable tiles and returns both updated map + movable set.
-export const deriveMovableTilesState = (boardMap, cols) => {
+export const deriveMovableTilesState = (boardMap: BoardMap, cols: number) => {
   const movableTiles = getAdjacentTiles({ boardMap, cols })
   const boardWithMovableFlags = boardMap.map(tile => {
     tile.active = findIndex(movableTiles, { id: tile.id }) !== -1
@@ -66,31 +81,44 @@ const pickDiversifiedShuffleMove = ({
   movableTiles,
   previousTileId,
   visitCountByOrder,
-}) => {
+}: {
+  movableTiles: BoardMap
+  previousTileId: number
+  visitCountByOrder: Record<number, number>
+}): Tile => {
   const noImmediateBacktrack = movableTiles.filter(
-    tile => tile.id !== previousTileId
+    (tile: Tile) => tile.id !== previousTileId
   )
   const candidates = noImmediateBacktrack.length
     ? noImmediateBacktrack
     : movableTiles
 
   const lowestVisitCount = Math.min(
-    ...candidates.map(tile => visitCountByOrder[tile.ord] || 0)
+    ...candidates.map((tile: Tile) => visitCountByOrder[tile.ord] || 0)
   )
   const leastVisitedCandidates = candidates.filter(
-    tile => (visitCountByOrder[tile.ord] || 0) === lowestVisitCount
+    (tile: Tile) => (visitCountByOrder[tile.ord] || 0) === lowestVisitCount
   )
 
   return leastVisitedCandidates[random(0, leastVisitedCandidates.length - 1)]
 }
 
 // Applies a sequence of legal moves to keep puzzle solvable after shuffling.
-export const shuffleItems = (steps, { moveTile, getMovableTiles }) => {
+export const shuffleItems = (
+  steps: number,
+  {
+    getMovableTiles,
+    moveTile,
+  }: {
+    getMovableTiles: () => BoardMap
+    moveTile: (tileId: number) => void
+  }
+) => {
   let stepCount = 0
   let previousTileId = -1
-  const visitCountByOrder = {}
+  const visitCountByOrder: Record<number, number> = {}
 
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     shuffleIntervalId = setInterval(() => {
       const movableTiles = getMovableTiles()
       if (!movableTiles.length) {
@@ -118,9 +146,12 @@ export const shuffleItems = (steps, { moveTile, getMovableTiles }) => {
 }
 
 // Swaps selected tile with empty tile by exchanging positional fields.
-export const moveTile = (boardMap, tileId) => {
-  const emptyTile = boardMap[findKey(boardMap, { id: 1 })]
-  const targetTile = boardMap[findKey(boardMap, { id: tileId })]
+export const moveTile = (boardMap: BoardMap, tileId: number): BoardMap => {
+  const emptyTile = boardMap.find(t => t.id === 1)
+  const targetTile = boardMap.find(t => t.id === tileId)
+  if (!emptyTile || !targetTile) {
+    return boardMap
+  }
   const { col, row, ord } = emptyTile
   emptyTile.col = targetTile.col
   emptyTile.row = targetTile.row
@@ -132,7 +163,7 @@ export const moveTile = (boardMap, tileId) => {
 }
 
 // Checks whether tiles are in solved order.
-export const isBoardSolved = boardMap => {
+export const isBoardSolved = (boardMap: BoardMap) => {
   const orderedBoardMap = orderBy(boardMap, 'ord', 'asc')
   return !orderedBoardMap.some((tile, index) => {
     return index > 0 && tile.id !== orderedBoardMap[index - 1].id + 1

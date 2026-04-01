@@ -14,6 +14,10 @@ import {
   deriveBoardPosition,
   initialBoardState,
 } from './boardState'
+import type { BoardProps } from './Board'
+import type { BoardMap } from './boardMapTools'
+
+type BoardController = Omit<BoardProps, 'isPictureLoading'>
 
 // Controls puzzle lifecycle: initialize, shuffle, moves, solved state.
 const useBoardController = ({
@@ -23,12 +27,12 @@ const useBoardController = ({
   shuffleSteps,
   pictureUrl,
   setPreparingBoard,
-}) => {
+}: BoardController) => {
   const [state, dispatch] = useReducer(boardReducer, initialBoardState)
   const { boardMap, movableTiles } = state
 
-  const boardMapRef = useRef(boardMap)
-  const movableTilesRef = useRef(movableTiles)
+  const boardMapRef = useRef<BoardMap>(boardMap)
+  const movableTilesRef = useRef<BoardMap>(movableTiles)
 
   useEffect(() => {
     boardMapRef.current = boardMap
@@ -40,7 +44,7 @@ const useBoardController = ({
 
   // Recomputes board map + movable tiles atomically after each move.
   const commitBoardPosition = useCallback(
-    inputMap => {
+    (inputMap: BoardMap) => {
       const sourceMap = inputMap || boardMapRef.current
       const nextPosition = deriveBoardPosition(sourceMap, cols)
       boardMapRef.current = nextPosition.boardMap
@@ -52,7 +56,7 @@ const useBoardController = ({
 
   // Executes a single legal tile move and marks completion when solved.
   const moveBoardTile = useCallback(
-    tileId => {
+    (tileId: number) => {
       const movedBoardMap = boardMapTools.moveTile(
         cloneBoardTiles(boardMapRef.current),
         tileId
@@ -113,8 +117,8 @@ const useBoardController = ({
       )
 
       await boardMapTools.shuffleItems(shuffleSteps, {
-        getMovableTiles: () => movableTilesRef.current,
-        moveTile: tileId => moveBoardTile(tileId),
+        getMovableTiles: (): BoardMap => movableTilesRef.current,
+        moveTile: moveBoardTile,
       })
 
       if (cancelled) {
